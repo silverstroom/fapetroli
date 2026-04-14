@@ -22,15 +22,6 @@ declare module "next-auth" {
   }
 }
 
-declare module "next-auth/jwt" {
-  interface JWT {
-    id: string;
-    role: Role;
-    status: UserStatus;
-    companyId: string | null;
-  }
-}
-
 const credentialsSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
