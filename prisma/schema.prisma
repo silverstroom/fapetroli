@@ -1,0 +1,135 @@
+// Prisma schema per FA Petroli Portale Clienti
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLED")
+}
+
+// ════════════════════════════════════════════════════════════════
+// USER - autenticazione (admin + clienti)
+// ════════════════════════════════════════════════════════════════
+enum Role {
+  ADMIN
+  CLIENT
+}
+
+enum UserStatus {
+  PENDING   // registrato, in attesa di approvazione admin
+  ACTIVE    // attivo, può accedere
+  SUSPENDED // sospeso dall'admin
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role       @default(CLIENT)
+  status       UserStatus @default(PENDING)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  company   Company? @relation(fields: [companyId], references: [id])
+  companyId String?
+
+  orders Order[]
+
+  @@index([email])
+  @@index([companyId])
+}
+
+// ════════════════════════════════════════════════════════════════
+// COMPANY - dati aziendali del cliente
+// ════════════════════════════════════════════════════════════════
+model Company {
+  id              String   @id @default(cuid())
+  ragioneSociale  String
+  partitaIva      String   @unique
+  codiceSdi       String?
+  pec             String?
+  indirizzo       String?
+  citta           String?
+  cap             String?
+  provincia       String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  users           User[]
+  deliveryPoints  DeliveryPoint[]
+  orders          Order[]
+}
+
+// ════════════════════════════════════════════════════════════════
+// DELIVERY POINT - punti di consegna del cliente
+// ════════════════════════════════════════════════════════════════
+model DeliveryPoint {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  isPrimary Boolean  @default(false)
+  icon      String?  // emoji per UI
+  createdAt DateTime @default(now())
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  orders    Order[]
+
+  @@index([companyId])
+}
+
+// ════════════════════════════════════════════════════════════════
+// PRODUCT - catalogo prodotti FA Petroli (gestito da admin)
+// ════════════════════════════════════════════════════════════════
+model Product {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  icon      String?  // emoji
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  orders    Order[]
+}
+
+// ════════════════════════════════════════════════════════════════
+// ORDER - ordini effettuati dai clienti
+// ════════════════════════════════════════════════════════════════
+enum OrderStatus {
+  WAITING     // In attesa
+  PROCESSING  // In lavorazione
+  DELIVERED   // Evaso
+  CANCELLED   // Annullato
+}
+
+model Order {
+  id          String      @id @default(cuid())
+  code        String      @unique // es. ORD-0042
+  quantity    Int         // litri
+  notes       String?
+  status      OrderStatus @default(WAITING)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  user      User    @relation(fields: [userId], references: [id])
+  userId    String
+
+  company   Company @relation(fields: [companyId], references: [id])
+  companyId String
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  deliveryPoint   DeliveryPoint @relation(fields: [deliveryPointId], references: [id])
+  deliveryPointId String
+
+  @@index([userId])
+  @@index([companyId])
+  @@index([status])
+  @@index([createdAt])
+}
