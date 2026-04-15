@@ -37,14 +37,20 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="auth-right">
-          <h2 className="auth-form-title">Accedi all'area riservata</h2>
+          <div className="auth-mobile-brand">
+            <div className="auth-brand-icon">FA</div>
+            <div className="auth-brand-name" style={{ color: "#0f2276" }}>
+              FA Petroli <small style={{ color: "#64748b" }}>Portale Clienti B2B</small>
+            </div>
+          </div>
+          <h2 className="auth-form-title">Accedi all&apos;area riservata</h2>
           <p className="auth-form-sub">
             Inserisci le credenziali fornite da FA Petroli
           </p>
           <LoginForm />
           <p className="auth-footer">
             Non sei ancora cliente?{" "}
-            <a href="/register">Richiedi l'attivazione →</a>
+            <a href="/register">Richiedi l&apos;attivazione →</a>
             <br />
             <br />
             Problemi di accesso? Contatta FA Petroli

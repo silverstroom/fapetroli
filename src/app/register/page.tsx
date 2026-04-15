@@ -30,6 +30,12 @@ export default function RegisterPage() {
           </div>
         </div>
         <div className="auth-right">
+          <div className="auth-mobile-brand">
+            <div className="auth-brand-icon">FA</div>
+            <div className="auth-brand-name" style={{ color: "#0f2276" }}>
+              FA Petroli <small style={{ color: "#64748b" }}>Portale Clienti B2B</small>
+            </div>
+          </div>
           <h2 className="auth-form-title">Richiedi attivazione</h2>
           <p className="auth-form-sub">
             Compila i dati: ti contatteremo entro 24h

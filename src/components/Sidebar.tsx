@@ -37,14 +37,13 @@ export default function Sidebar({
       <button
         className="hamburger-btn"
         onClick={() => setOpen(true)}
-        style={{
-          position: "fixed",
-          top: 14,
-          left: 12,
-          zIndex: 98,
-        }}
+        aria-label="Apri menu"
       >
-        ☰
+        <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
+          <rect width="22" height="2.5" rx="1.25" fill="currentColor" />
+          <rect y="7.5" width="22" height="2.5" rx="1.25" fill="currentColor" />
+          <rect y="15" width="16" height="2.5" rx="1.25" fill="currentColor" />
+        </svg>
       </button>
       <div
         className={"sidebar-overlay" + (open ? " open" : "")}
@@ -56,6 +55,13 @@ export default function Sidebar({
           <div className="sidebar-brand-text">
             FA Petroli <small>{brandSubtitle}</small>
           </div>
+          <button
+            className="sidebar-close-btn"
+            onClick={() => setOpen(false)}
+            aria-label="Chiudi menu"
+          >
+            ✕
+          </button>
         </div>
         <div className="sidebar-client">
           <div className="sidebar-client-label">{clientLabel}</div>

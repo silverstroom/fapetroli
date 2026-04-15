@@ -1291,3 +1291,450 @@ tbody tr:last-child td {
     grid-template-columns: 1fr;
   }
 }
+
+/* ════ MOBILE BRAND (auth pages) ════ */
+.auth-mobile-brand {
+  display: none;
+}
+.sidebar-close-btn {
+  display: none;
+}
+
+/* ════ ENHANCED RESPONSIVE ════ */
+@media (max-width: 768px) {
+  /* iOS safe areas */
+  body {
+    padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  }
+
+  /* Mobile brand on auth pages */
+  .auth-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .auth-mobile-brand .auth-brand-icon {
+    width: 46px;
+    height: 46px;
+    font-size: 18px;
+  }
+  .auth-mobile-brand .auth-brand-name {
+    font-size: 22px;
+  }
+
+  /* Better hamburger button */
+  .hamburger-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    z-index: 98;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    border: 1px solid var(--gray-200);
+    color: var(--blue-dark);
+    padding: 0;
+  }
+
+  /* Sidebar close button */
+  .sidebar-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 16px;
+    cursor: pointer;
+  }
+  .sidebar-close-btn:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+  }
+
+  /* Smooth sidebar */
+  .sidebar {
+    position: fixed;
+    left: -290px;
+    top: 0;
+    z-index: 100;
+    width: 280px;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+  .sidebar.open {
+    left: 0;
+    box-shadow: 8px 0 32px rgba(0,0,0,0.3);
+  }
+
+  /* Overlay animation */
+  .sidebar-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0);
+    z-index: 99;
+    pointer-events: none;
+    transition: background 0.3s ease;
+  }
+  .sidebar-overlay.open {
+    background: rgba(0,0,0,0.5);
+    pointer-events: auto;
+  }
+
+  /* Topbar */
+  .topbar {
+    padding: 0 16px;
+    padding-left: 56px;
+    height: 56px;
+  }
+  .topbar-title {
+    font-size: 17px;
+  }
+  .topbar-uname {
+    display: none;
+  }
+  .topbar-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 11px;
+  }
+
+  /* Content */
+  .content {
+    padding: 16px;
+  }
+
+  /* Auth pages */
+  .auth-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .auth-left {
+    display: none;
+  }
+  .auth-right {
+    width: 100%;
+    min-height: 100dvh;
+    padding: 40px 24px;
+    box-shadow: none;
+    justify-content: flex-start;
+    padding-top: 48px;
+  }
+  .auth-form-title {
+    font-size: 26px;
+  }
+  .auth-form-sub {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  /* Better touch targets on forms */
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    padding: 14px 16px;
+    font-size: 16px; /* prevents iOS zoom */
+  }
+  .btn-primary {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  /* Dashboard */
+  .dashboard-greeting {
+    margin-bottom: 20px;
+  }
+  .dashboard-greeting h2 {
+    font-size: 22px;
+  }
+  .dashboard-greeting p {
+    font-size: 13px;
+  }
+
+  /* KPI */
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .kpi-card {
+    padding: 16px;
+    border-radius: 12px;
+    border-left-width: 3px;
+  }
+  .kpi-icon {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .kpi-label {
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+  .kpi-value {
+    font-size: 22px;
+  }
+  .kpi-sub {
+    font-size: 11px;
+    margin-top: 4px;
+  }
+
+  /* Page header */
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .page-header h2 {
+    font-size: 20px;
+  }
+  .page-header p {
+    font-size: 13px;
+  }
+
+  /* Tables */
+  .card {
+    border-radius: 12px;
+  }
+  .card-header {
+    padding: 14px 16px;
+  }
+  .card-title {
+    font-size: 14px;
+  }
+  thead th {
+    padding: 10px 12px;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  tbody td {
+    padding: 12px 12px;
+    font-size: 13px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Scroll hint gradient */
+  .table-wrap::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.8));
+    pointer-events: none;
+  }
+  .card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Order form */
+  .order-form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .order-card {
+    padding: 18px;
+    border-radius: 12px;
+  }
+  .order-card h3 {
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .prod-tile {
+    padding: 12px 8px;
+    border-radius: 10px;
+  }
+  .prod-tile-icon {
+    font-size: 26px;
+  }
+  .prod-tile-name {
+    font-size: 12px;
+  }
+  .qty-presets {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .qty-preset {
+    padding: 12px 8px;
+    font-size: 14px;
+  }
+  .order-summary-card {
+    position: static;
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .order-summary-card h3 {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  /* Profile */
+  .profile-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .profile-header-card {
+    flex-direction: column;
+    text-align: center;
+    gap: 12px;
+    padding: 20px;
+    border-radius: 12px;
+  }
+  .profile-avatar-big {
+    width: 56px;
+    height: 56px;
+    font-size: 20px;
+    border-radius: 12px;
+  }
+  .profile-name {
+    font-size: 18px;
+  }
+  .profile-piva {
+    margin-left: 0;
+  }
+  .profile-card {
+    border-radius: 12px;
+  }
+  .profile-card-body {
+    padding: 16px;
+  }
+
+  /* Filters */
+  .filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .filter-bar input,
+  .filter-bar select {
+    width: 100% !important;
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+  .filter-label {
+    display: none;
+  }
+
+  /* Form rows */
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  /* Badges */
+  .badge {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  /* Action buttons */
+  .btn-orange {
+    width: 100%;
+    text-align: center;
+    padding: 12px 20px;
+  }
+  .btn-secondary,
+  .btn-success,
+  .btn-danger {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+
+  /* Success screen */
+  .success-screen {
+    padding: 40px 20px;
+    border-radius: 12px;
+  }
+  .success-icon {
+    font-size: 56px;
+  }
+  .success-title {
+    font-size: 22px;
+  }
+  .success-msg {
+    font-size: 14px;
+  }
+  .success-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Alerts */
+  .alert {
+    font-size: 13px;
+    padding: 12px 14px;
+    border-radius: 8px;
+  }
+
+  /* Empty state */
+  .empty-state {
+    padding: 40px 16px;
+    font-size: 13px;
+  }
+  .empty-state-icon {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .order-form-grid {
+    grid-template-columns: 1fr 300px;
+  }
+  .auth-left {
+    padding: 60px 48px;
+  }
+  .auth-headline {
+    font-size: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth-right {
+    padding: 32px 16px;
+    padding-top: 40px;
+  }
+  .auth-mobile-brand .auth-brand-name {
+    font-size: 20px;
+  }
+  .products-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+  .kpi-card {
+    padding: 14px;
+  }
+  .qty-presets {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
