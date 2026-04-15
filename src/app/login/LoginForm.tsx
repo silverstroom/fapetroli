@@ -4,6 +4,26 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
+function LoadingScreen() {
+  const text = "Accesso in corso...";
+  return (
+    <div className="loading-screen">
+      <div className="loading-screen-logo">FA</div>
+      <div className="loading-screen-text">
+        {text.split("").map((ch, i) => (
+          <span key={i} className="loading-screen-letter">
+            {ch === " " ? "\u00A0" : ch}
+          </span>
+        ))}
+      </div>
+      <div className="loading-screen-bar-wrap">
+        <div className="loading-screen-bar" />
+      </div>
+      <div className="loading-screen-sub">FA Petroli — Portale Clienti B2B</div>
+    </div>
+  );
+}
+
 export default function LoginForm() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -11,6 +31,7 @@ export default function LoginForm() {
   const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -30,8 +51,16 @@ export default function LoginForm() {
       );
       return;
     }
-    router.push("/");
-    router.refresh();
+    // Login ok, show loading screen then redirect
+    setShowLoader(true);
+    setTimeout(() => {
+      router.push("/");
+      router.refresh();
+    }, 600);
+  }
+
+  if (showLoader) {
+    return <LoadingScreen />;
   }
 
   return (
@@ -93,7 +122,7 @@ export default function LoginForm() {
               </svg>
             ) : (
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 11-8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
               </svg>
             )}
           </button>
@@ -105,7 +134,7 @@ export default function LoginForm() {
         className="login-v2-submit"
         disabled={loading}
       >
-        <span>{loading ? "Accesso in corso..." : "Accedi al portale"}</span>
+        <span>{loading ? "Verifica credenzibali..." : "Accedi al portale"}</span>
         {!loading && (
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7"/>
