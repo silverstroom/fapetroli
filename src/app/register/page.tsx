@@ -2,48 +2,54 @@ import RegisterForm from "./RegisterForm";
 
 export default function RegisterPage() {
   return (
-    <div className="auth-page">
-      <div className="auth-grid">
-        <div className="auth-left">
-          <div className="auth-brand">
-            <div className="auth-brand-icon">FA</div>
-            <div className="auth-brand-name">
-              FA Petroli <small>Portale Clienti B2B</small>
+    <div className="login-v2-wrapper">
+      <div className="login-v2-card">
+        {/* Left side - Branded panel */}
+        <div className="login-v2-left">
+          <div className="login-v2-dots" />
+          <div className="login-v2-left-content">
+            <div className="login-v2-logo">
+              <div className="login-v2-logo-icon">FA</div>
+            </div>
+            <h2 className="login-v2-brand-title">FA Petroli</h2>
+            <p className="login-v2-brand-sub">Portale Clienti B2B</p>
+            <div className="login-v2-features">
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Registrazione gratuita in 2 minuti
+              </div>
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Approvazione rapida e garantita
+              </div>
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Nessun vincolo, nessun abbonamento
+              </div>
             </div>
           </div>
-          <h1 className="auth-headline">
-            Diventa cliente
-            <br />
-            <em>FA Petroli.</em>
-          </h1>
-          <p className="auth-sub">
-            Registra la tua azienda al portale B2B. Una volta verificati i
-            dati, FA Petroli attiverà il tuo account e riceverai una email di
-            conferma per iniziare a ordinare.
-          </p>
-          <div className="auth-bullets">
-            <div className="auth-bullet">Registrazione gratuita in 2 minuti</div>
-            <div className="auth-bullet">
-              Approvazione manuale per garantire qualità del servizio
-            </div>
-            <div className="auth-bullet">Nessun vincolo, nessun abbonamento</div>
-          </div>
+          <div className="login-v2-circle login-v2-circle-1" />
+          <div className="login-v2-circle login-v2-circle-2" />
+          <div className="login-v2-circle login-v2-circle-3" />
         </div>
-        <div className="auth-right">
-          <div className="auth-mobile-brand">
-            <div className="auth-brand-icon">FA</div>
-            <div className="auth-brand-name" style={{ color: "#0f2276" }}>
-              FA Petroli <small style={{ color: "#64748b" }}>Portale Clienti B2B</small>
+
+        {/* Right side - Form */}
+        <div className="login-v2-right login-v2-right-scroll">
+          <div className="login-v2-mobile-brand">
+            <div className="login-v2-logo-icon-sm">FA</div>
+            <div>
+              <div className="login-v2-mobile-title">FA Petroli</div>
+              <div className="login-v2-mobile-sub">Portale Clienti B2B</div>
             </div>
           </div>
-          <h2 className="auth-form-title">Richiedi attivazione</h2>
-          <p className="auth-form-sub">
-            Compila i dati: ti contatteremo entro 24h
-          </p>
+          <h1 className="login-v2-title">Diventa cliente</h1>
+          <p className="login-v2-subtitle">Compila i dati: ti contatteremo entro 24h</p>
           <RegisterForm />
-          <p className="auth-footer">
-            Hai già un account? <a href="/login">Accedi →</a>
-          </p>
+          <div className="login-v2-footer">
+            <p>
+              Hai già un account? <a href="/login">Accedi →</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>

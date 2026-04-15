@@ -1738,3 +1738,446 @@ tbody tr:last-child td {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN V2 — Modern Card Design
+   ════════════════════════════════════════════════════════════ */
+
+@keyframes loginFadeIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes loginSlideUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes loginFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-8px, -12px); }
+}
+@keyframes loginFloat2 {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(10px, -8px); }
+}
+@keyframes loginShine {
+  from { left: -100%; }
+  to { left: 200%; }
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 0.35; }
+}
+
+.login-v2-wrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #e8edf8 0%, #f0f3fb 50%, #fff4e6 100%);
+  padding: 24px;
+}
+
+.login-v2-card {
+  display: flex;
+  width: 100%;
+  max-width: 960px;
+  min-height: 580px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(15, 34, 118, 0.12), 0 1px 3px rgba(0,0,0,0.06);
+  animation: loginFadeIn 0.6s ease-out;
+}
+
+/* ── Left Panel ── */
+.login-v2-left {
+  width: 420px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 60%, var(--blue-mid) 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-v2-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1px);
+  background-size: 20px 20px;
+  animation: dotPulse 4s ease-in-out infinite;
+}
+.login-v2-left-content {
+  position: relative;
+  z-index: 2;
+  padding: 48px 36px;
+  text-align: center;
+}
+.login-v2-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  animation: loginSlideUp 0.6s ease-out 0.3s both;
+}
+.login-v2-logo-icon {
+  width: 60px;
+  height: 60px;
+  background: var(--orange);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-size: 24px;
+  color: #fff;
+  letter-spacing: -1px;
+  box-shadow: 0 8px 24px rgba(240, 126, 16, 0.4);
+}
+.login-v2-brand-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  animation: loginSlideUp 0.6s ease-out 0.4s both;
+}
+.login-v2-brand-sub {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 36px;
+  animation: loginSlideUp 0.6s ease-out 0.5s both;
+}
+.login-v2-features {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  text-align: left;
+  animation: loginSlideUp 0.6s ease-out 0.6s both;
+}
+.login-v2-feature {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: rgba(255,255,255,0.7);
+  font-size: 14px;
+  line-height: 1.4;
+}
+.login-v2-feature-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--orange);
+  flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(240, 126, 16, 0.5);
+}
+
+/* Decorative circles */
+.login-v2-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.login-v2-circle-1 {
+  width: 300px;
+  height: 300px;
+  top: -80px;
+  right: -100px;
+  animation: loginFloat 8s ease-in-out infinite;
+}
+.login-v2-circle-2 {
+  width: 200px;
+  height: 200px;
+  bottom: -60px;
+  left: -40px;
+  background: rgba(240, 126, 16, 0.06);
+  animation: loginFloat2 6s ease-in-out infinite;
+}
+.login-v2-circle-3 {
+  width: 120px;
+  height: 120px;
+  top: 40%;
+  right: -30px;
+  background: rgba(255,255,255,0.03);
+  animation: loginFloat 10s ease-in-out infinite reverse;
+}
+
+/* ── Right Panel ── */
+.login-v2-right {
+  flex: 1;
+  padding: 48px 44px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.login-v2-right-scroll {
+  overflow-y: auto;
+  justify-content: flex-start;
+  padding-top: 36px;
+}
+.login-v2-mobile-brand {
+  display: none;
+}
+.login-v2-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--blue-dark);
+  margin-bottom: 4px;
+  animation: loginSlideUp 0.5s ease-out 0.2s both;
+}
+.login-v2-subtitle {
+  color: var(--gray-500);
+  font-size: 15px;
+  margin-bottom: 32px;
+  animation: loginSlideUp 0.5s ease-out 0.3s both;
+}
+
+/* ── Form ── */
+.login-v2-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  animation: loginSlideUp 0.5s ease-out 0.4s both;
+}
+.login-v2-field label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-600);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.login-v2-required {
+  color: var(--orange);
+}
+.login-v2-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+.login-v2-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--gray-400);
+  pointer-events: none;
+  z-index: 1;
+}
+.login-v2-input-wrap input {
+  width: 100%;
+  padding: 13px 16px 13px 42px;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 12px;
+  font-size: 15px;
+  color: var(--gray-900);
+  background: var(--gray-50);
+  transition: all 0.2s;
+  outline: none;
+  font-family: "Nunito Sans", sans-serif;
+}
+.login-v2-input-wrap input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26, 58, 173, 0.1);
+  background: #fff;
+}
+.login-v2-input-wrap input::placeholder {
+  color: var(--gray-400);
+}
+.login-v2-eye-btn {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  padding: 4px;
+  color: var(--gray-400);
+  cursor: pointer;
+  display: flex;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.login-v2-eye-btn:hover {
+  color: var(--gray-700);
+  background: var(--gray-100);
+}
+
+.login-v2-submit {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  font-family: "Nunito Sans", sans-serif;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 16px rgba(26, 58, 173, 0.3);
+  margin-top: 4px;
+}
+.login-v2-submit:hover {
+  box-shadow: 0 6px 24px rgba(26, 58, 173, 0.4);
+  transform: translateY(-1px);
+}
+.login-v2-submit:hover .login-v2-submit-shine {
+  animation: loginShine 0.8s ease-in-out;
+}
+.login-v2-submit:active {
+  transform: translateY(0);
+}
+.login-v2-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+.login-v2-submit-shine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -100%;
+  width: 60px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.login-v2-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--red-light);
+  color: var(--red);
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* ── Footer ── */
+.login-v2-footer {
+  margin-top: 28px;
+  text-align: center;
+  animation: loginSlideUp 0.5s ease-out 0.5s both;
+}
+.login-v2-footer p {
+  color: var(--gray-400);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.login-v2-footer a {
+  color: var(--orange);
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.login-v2-footer a:hover {
+  color: var(--orange-dark);
+}
+.login-v2-contact {
+  margin-top: 12px;
+}
+.login-v2-contact a {
+  color: var(--blue);
+}
+
+/* ── Mobile Brand ── */
+.login-v2-logo-icon-sm {
+  width: 42px;
+  height: 42px;
+  background: var(--orange);
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Barlow Condensed", sans-serif;
+  font-weight: 800;
+  font-size: 17px;
+  color: #fff;
+  letter-spacing: -1px;
+  box-shadow: 0 4px 12px rgba(240, 126, 16, 0.3);
+}
+.login-v2-mobile-title {
+  font-family: "Barlow Condensed", sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--blue-dark);
+}
+.login-v2-mobile-sub {
+  font-size: 12px;
+  color: var(--gray-400);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── Login V2 Responsive ── */
+@media (max-width: 768px) {
+  .login-v2-wrapper {
+    padding: 0;
+    align-items: flex-start;
+  }
+  .login-v2-card {
+    flex-direction: column;
+    border-radius: 0;
+    min-height: 100dvh;
+    max-width: 100%;
+    box-shadow: none;
+  }
+  .login-v2-left {
+    display: none;
+  }
+  .login-v2-right {
+    padding: 32px 24px;
+    padding-top: 48px;
+  }
+  .login-v2-mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-200);
+  }
+  .login-v2-title {
+    font-size: 26px;
+  }
+  .login-v2-subtitle {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+  .login-v2-input-wrap input {
+    font-size: 16px;
+    padding: 14px 16px 14px 42px;
+  }
+  .login-v2-submit {
+    padding: 16px 24px;
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-v2-right {
+    padding: 24px 16px;
+    padding-top: 40px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .login-v2-left {
+    width: 340px;
+  }
+  .login-v2-left-content {
+    padding: 36px 28px;
+  }
+  .login-v2-brand-title {
+    font-size: 30px;
+  }
+}

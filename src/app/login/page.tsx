@@ -2,61 +2,65 @@ import LoginForm from "./LoginForm";
 
 export default function LoginPage() {
   return (
-    <div className="auth-page">
-      <div className="auth-grid">
-        <div className="auth-left">
-          <div className="auth-brand">
-            <div className="auth-brand-icon">FA</div>
-            <div className="auth-brand-name">
-              FA Petroli <small>Portale Clienti B2B</small>
+    <div className="login-v2-wrapper">
+      <div className="login-v2-card">
+        {/* Left side - Branded panel */}
+        <div className="login-v2-left">
+          <div className="login-v2-dots" />
+          <div className="login-v2-left-content">
+            <div className="login-v2-logo">
+              <div className="login-v2-logo-icon">FA</div>
+            </div>
+            <h2 className="login-v2-brand-title">FA Petroli</h2>
+            <p className="login-v2-brand-sub">Portale Clienti B2B</p>
+            <div className="login-v2-features">
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Ordina carburanti 24/7
+              </div>
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Monitora le consegne in tempo reale
+              </div>
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Storico ordini sempre disponibile
+              </div>
+              <div className="login-v2-feature">
+                <span className="login-v2-feature-dot" />
+                Gestisci il profilo aziendale
+              </div>
             </div>
           </div>
-          <h1 className="auth-headline">
-            Il tuo ordine,
-            <br />
-            <em>in pochi click.</em>
-          </h1>
-          <p className="auth-sub">
-            Accedi al portale riservato ai clienti B2B di FA Petroli: ordina
-            carburanti, monitora le consegne e gestisci il tuo profilo
-            aziendale in totale autonomia.
-          </p>
-          <div className="auth-bullets">
-            <div className="auth-bullet">
-              Ordina gasolio, benzina e lubrificanti 24 ore su 24
-            </div>
-            <div className="auth-bullet">
-              Seleziona tra i tuoi punti di consegna abilitati
-            </div>
-            <div className="auth-bullet">
-              Conferma via email immediata dopo ogni ordine
-            </div>
-            <div className="auth-bullet">
-              Storico ordini sempre disponibile e filtrabile
-            </div>
-          </div>
+          {/* Decorative circles */}
+          <div className="login-v2-circle login-v2-circle-1" />
+          <div className="login-v2-circle login-v2-circle-2" />
+          <div className="login-v2-circle login-v2-circle-3" />
         </div>
-        <div className="auth-right">
-          <div className="auth-mobile-brand">
-            <div className="auth-brand-icon">FA</div>
-            <div className="auth-brand-name" style={{ color: "#0f2276" }}>
-              FA Petroli <small style={{ color: "#64748b" }}>Portale Clienti B2B</small>
+
+        {/* Right side - Form */}
+        <div className="login-v2-right">
+          <div className="login-v2-mobile-brand">
+            <div className="login-v2-logo-icon-sm">FA</div>
+            <div>
+              <div className="login-v2-mobile-title">FA Petroli</div>
+              <div className="login-v2-mobile-sub">Portale Clienti B2B</div>
             </div>
           </div>
-          <h2 className="auth-form-title">Accedi all&apos;area riservata</h2>
-          <p className="auth-form-sub">
-            Inserisci le credenziali fornite da FA Petroli
-          </p>
+          <h1 className="login-v2-title">Bentornato</h1>
+          <p className="login-v2-subtitle">Accedi al tuo account aziendale</p>
           <LoginForm />
-          <p className="auth-footer">
-            Non sei ancora cliente?{" "}
-            <a href="/register">Richiedi l&apos;attivazione →</a>
-            <br />
-            <br />
-            Problemi di accesso? Contatta FA Petroli
-            <br />
-            📞 <a href="tel:0968453815">0968-453815</a>
-          </p>
+          <div className="login-v2-footer">
+            <p>
+              Non sei ancora cliente?{" "}
+              <a href="/register">Richiedi l&apos;attivazione →</a>
+            </p>
+            <p className="login-v2-contact">
+              Problemi di accesso? Contatta FA Petroli
+              <br />
+              📞 <a href="tel:0968453815">0968-453815</a>
+            </p>
+          </div>
         </div>
       </div>
     </div>
