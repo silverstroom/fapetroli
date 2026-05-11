@@ -2,6 +2,9 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Topbar from "@/components/Topbar";
 import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 function todayUTC() {
   const d = new Date();
@@ -42,110 +45,127 @@ export default async function ListinoClientPage() {
   return (
     <>
       <Topbar title="Listino prezzi" userName={session!.user.name ?? "Cliente"} />
-      <div className="content">
-        <div className="page-header">
+      <div className="content font-sans">
+        <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
           <div>
-            <h2>Listino prezzi del giorno 💶</h2>
-            <p>
+            <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
+              Listino prezzi del giorno 💶
+            </h2>
+            <p className="text-muted-foreground max-w-2xl">
               Prezzi €/litro aggiornati da FA Petroli. Il totale della tua
               richiesta verrà calcolato sulla quantità che indicherai.
             </p>
           </div>
-          <Link href="/client/nuovo-ordine" className="btn-orange">
-            ➕ Invia una richiesta
-          </Link>
+          <Button asChild variant="accent" size="lg">
+            <Link href="/client/nuovo-ordine">➕ Invia una richiesta</Link>
+          </Button>
         </div>
 
         {prices.length === 0 ? (
-          <div className="card">
-            <div style={{ padding: 40 }}>
-              <div className="empty-state">
-                <div className="empty-state-icon">📋</div>
-                <p>Nessun listino disponibile.</p>
-                <p style={{ fontSize: 13, color: "var(--gray-500)", marginTop: 8 }}>
-                  FA Petroli pubblicherà a breve i prezzi aggiornati.
-                </p>
-              </div>
-            </div>
-          </div>
+          <Card>
+            <CardContent className="p-12 text-center">
+              <div className="text-5xl mb-3">📋</div>
+              <p className="font-display text-xl font-bold text-brand-blue mb-1">
+                Nessun listino disponibile
+              </p>
+              <p className="text-sm text-muted-foreground">
+                FA Petroli pubblicherà a breve i prezzi aggiornati.
+              </p>
+            </CardContent>
+          </Card>
         ) : (
           <>
-            <div
-              className={"alert " + (isToday ? "alert-success" : "alert-info")}
-              style={{ marginBottom: 20 }}
-            >
-              {isToday ? "✅" : "ℹ️"}{" "}
-              {isToday
-                ? "Listino aggiornato a oggi: "
-                : "Ultimo listino disponibile: "}
-              <strong>
-                {effectiveDate.toLocaleDateString("it-IT", {
-                  weekday: "long",
-                  day: "2-digit",
-                  month: "long",
-                  year: "numeric",
-                })}
-              </strong>
+            <div className={
+              "mb-6 flex items-center gap-3 rounded-xl border p-4 " +
+              (isToday ? "border-emerald-200 bg-emerald-50" : "border-blue-200 bg-blue-50")
+            }>
+              <span className="text-2xl">{isToday ? "✅" : "ℹ️"}</span>
+              <div className="flex-1 text-sm">
+                <span className={isToday ? "text-emerald-900" : "text-blue-900"}>
+                  {isToday ? "Listino aggiornato a oggi: " : "Ultimo listino disponibile: "}
+                </span>
+                <strong className="font-bold">
+                  {effectiveDate.toLocaleDateString("it-IT", {
+                    weekday: "long",
+                    day: "2-digit",
+                    month: "long",
+                    year: "numeric",
+                  })}
+                </strong>
+              </div>
             </div>
 
-            <div className="kpi-grid" style={{ marginBottom: 24 }}>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
               {prices.map((p) => (
-                <div key={p.id} className="kpi-card blue">
-                  <div className="kpi-icon">{p.product.icon ?? "⛽"}</div>
-                  <div className="kpi-label">{p.product.name}</div>
-                  <div className="kpi-value">€ {p.price.toFixed(3)}</div>
-                  <div className="kpi-sub">al litro</div>
-                  {p.notes && (
-                    <div
-                      style={{
-                        marginTop: 8,
-                        fontSize: 12,
-                        color: "var(--gray-500)",
-                        fontStyle: "italic",
-                      }}
-                    >
-                      {p.notes}
+                <Card
+                  key={p.id}
+                  className="group relative overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200"
+                >
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-brand-orange/10 to-transparent rounded-full -translate-y-12 translate-x-12" />
+                  <CardContent className="relative p-6">
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="text-4xl">{p.product.icon ?? "⛽"}</div>
+                      {p.notes && (
+                        <Badge variant="accent" className="text-[10px]">
+                          {p.notes}
+                        </Badge>
+                      )}
                     </div>
-                  )}
-                </div>
+                    <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                      {p.product.name}
+                    </div>
+                    <div className="font-display text-4xl font-extrabold text-brand-orange-dark">
+                      € {p.price.toFixed(3)}
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">al litro</div>
+                    <div className="mt-4 pt-4 border-t border-border text-xs space-y-1.5">
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>1.000 L</span>
+                        <span className="font-semibold text-brand-blue">€ {(p.price * 1000).toFixed(2)}</span>
+                      </div>
+                      <div className="flex justify-between text-muted-foreground">
+                        <span>5.000 L</span>
+                        <span className="font-semibold text-brand-blue">€ {(p.price * 5000).toFixed(2)}</span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
             </div>
 
-            <div className="card">
-              <div className="card-header">
-                <span className="card-title">📋 Riepilogo prezzi (€/L)</span>
-              </div>
-              <div className="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Prodotto</th>
-                      <th>Prezzo unitario</th>
-                      <th>Esempio 1.000 L</th>
-                      <th>Esempio 5.000 L</th>
-                      <th>Note</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {prices.map((p) => (
-                      <tr key={p.id}>
-                        <td className="td-bold">
-                          {p.product.icon ?? "⛽"} {p.product.name}
-                        </td>
-                        <td style={{ color: "var(--orange)", fontWeight: 700 }}>
-                          € {p.price.toFixed(3)}
-                        </td>
-                        <td>€ {(p.price * 1000).toFixed(2)}</td>
-                        <td>€ {(p.price * 5000).toFixed(2)}</td>
-                        <td style={{ fontSize: 13, color: "var(--gray-500)" }}>
-                          {p.notes ?? "—"}
-                        </td>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">📋 Riepilogo prezzi (€/L)</CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-border bg-muted/50">
+                        <th className="text-left font-semibold text-muted-foreground p-3">Prodotto</th>
+                        <th className="text-left font-semibold text-muted-foreground p-3">Prezzo unitario</th>
+                        <th className="text-left font-semibold text-muted-foreground p-3">Esempio 1.000 L</th>
+                        <th className="text-left font-semibold text-muted-foreground p-3">Esempio 5.000 L</th>
+                        <th className="text-left font-semibold text-muted-foreground p-3">Note</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                    </thead>
+                    <tbody>
+                      {prices.map((p) => (
+                        <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                          <td className="p-3 font-bold text-brand-blue">
+                            {p.product.icon ?? "⛽"} {p.product.name}
+                          </td>
+                          <td className="p-3 font-bold text-brand-orange-dark">€ {p.price.toFixed(3)}</td>
+                          <td className="p-3">€ {(p.price * 1000).toFixed(2)}</td>
+                          <td className="p-3">€ {(p.price * 5000).toFixed(2)}</td>
+                          <td className="p-3 text-xs text-muted-foreground">{p.notes ?? "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
           </>
         )}
       </div>

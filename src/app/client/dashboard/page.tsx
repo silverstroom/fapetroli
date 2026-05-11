@@ -3,6 +3,9 @@ import { prisma } from "@/lib/prisma";
 import Topbar from "@/components/Topbar";
 import { formatLitres, statusBadgeClass, statusLabel } from "@/lib/utils";
 import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -12,8 +15,10 @@ export default async function DashboardPage() {
   const now = new Date();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfYear = new Date(now.getFullYear(), 0, 1);
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
 
-  const [ordersThisMonth, lastOrders, yearOrders, deliveredCount, totalCount] =
+  const [ordersThisMonth, lastOrders, yearOrders, deliveredCount, totalCount, todayPrices] =
     await Promise.all([
       prisma.order.count({
         where: { companyId, createdAt: { gte: startOfMonth } },
@@ -29,14 +34,13 @@ export default async function DashboardPage() {
         _sum: { quantity: true },
       }),
       prisma.order.count({
-        where: {
-          companyId,
-          status: "DELIVERED",
-          createdAt: { gte: startOfMonth },
-        },
+        where: { companyId, status: "DELIVERED", createdAt: { gte: startOfMonth } },
       }),
-      prisma.order.count({
-        where: { companyId, createdAt: { gte: startOfMonth } },
+      prisma.order.count({ where: { companyId, createdAt: { gte: startOfMonth } } }),
+      prisma.dailyPrice.findMany({
+        where: { date: today },
+        include: { product: true },
+        orderBy: { product: { name: "asc" } },
       }),
     ]);
 
@@ -45,111 +49,154 @@ export default async function DashboardPage() {
   return (
     <>
       <Topbar title="Dashboard" userName={userName} />
-      <div className="content">
-        <div className="dashboard-greeting">
-          <h2>Buongiorno, {userName.split(" ")[0]} 👋</h2>
-          <p>Ecco il riepilogo della tua attività con FA Petroli</p>
+      <div className="content font-sans">
+        <div className="mb-6">
+          <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
+            Buongiorno, {userName.split(" ")[0]} 👋
+          </h2>
+          <p className="text-muted-foreground">
+            Ecco il riepilogo della tua attività con FA Petroli
+          </p>
         </div>
 
-        <div className="kpi-grid">
-          <div className="kpi-card blue">
-            <div className="kpi-icon">📦</div>
-            <div className="kpi-label">Richieste questo mese</div>
-            <div className="kpi-value">{ordersThisMonth}</div>
-            <div className="kpi-sub">Aggiornato in tempo reale</div>
-          </div>
-          <div className="kpi-card orange">
-            <div className="kpi-icon">🛢️</div>
-            <div className="kpi-label">Litri richiesti (anno in corso)</div>
-            <div className="kpi-value">{formatLitres(litresYear)}</div>
-            <div className="kpi-sub">Dal 1° gennaio</div>
-          </div>
-          <div className="kpi-card green">
-            <div className="kpi-icon">✅</div>
-            <div className="kpi-label">Richieste evase (mese)</div>
-            <div className="kpi-value">
-              {deliveredCount} / {totalCount}
-            </div>
-            <div className="kpi-sub">
-              {totalCount - deliveredCount} in lavorazione
-            </div>
-          </div>
-        </div>
-
-        <div className="card" style={{ marginBottom: 20, background: "linear-gradient(135deg, #1a3a5c 0%, #15243d 100%)", color: "#fff", border: "none" }}>
-          <div style={{ padding: 24, display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
-            <div style={{ fontSize: 40 }}>💶</div>
-            <div style={{ flex: 1, minWidth: 200 }}>
-              <div style={{ fontSize: 13, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
-                Listino prezzi del giorno
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <Card className="overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-3xl">📦</div>
+                <Badge variant="outline" className="text-[10px]">Mese</Badge>
               </div>
-              <div style={{ fontSize: 18, fontWeight: 700 }}>
-                Controlla i prezzi aggiornati e fai una stima
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                Richieste questo mese
               </div>
-            </div>
-            <Link href="/client/listino" className="btn-orange">
-              Vedi listino →
-            </Link>
-            <Link href="/client/nuovo-ordine" className="btn-ghost" style={{ background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}>
-              Invia richiesta
-            </Link>
-          </div>
+              <div className="font-display text-4xl font-extrabold text-brand-blue">
+                {ordersThisMonth}
+              </div>
+              <div className="text-xs text-muted-foreground mt-2">
+                Aggiornato in tempo reale
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-3xl">🛢️</div>
+                <Badge variant="accent" className="text-[10px]">Anno</Badge>
+              </div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                Litri richiesti
+              </div>
+              <div className="font-display text-4xl font-extrabold text-brand-orange-dark">
+                {formatLitres(litresYear)}
+              </div>
+              <div className="text-xs text-muted-foreground mt-2">
+                Dal 1° gennaio
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="overflow-hidden">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between mb-3">
+                <div className="text-3xl">✅</div>
+                <Badge variant="success" className="text-[10px]">Mese</Badge>
+              </div>
+              <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
+                Richieste evase
+              </div>
+              <div className="font-display text-4xl font-extrabold text-emerald-700">
+                {deliveredCount}<span className="text-2xl text-muted-foreground">/{totalCount}</span>
+              </div>
+              <div className="text-xs text-muted-foreground mt-2">
+                {totalCount - deliveredCount} in lavorazione
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
-        <div className="card">
-          <div className="card-header">
-            <span className="card-title">Ultime richieste</span>
-            <Link className="card-link" href="/client/storico">
-              Vedi tutti →
+        {/* CTA Listino */}
+        <Card className="mb-6 overflow-hidden border-none bg-gradient-to-br from-[#0F1E37] via-[#15243d] to-[#1A3A5C] text-white relative">
+          <div className="absolute -right-16 -bottom-16 w-72 h-72 rounded-full bg-brand-orange/20 blur-3xl" />
+          <CardContent className="relative p-6 flex flex-wrap items-center gap-4">
+            <div className="text-5xl">💶</div>
+            <div className="flex-1 min-w-[200px]">
+              <div className="text-xs uppercase tracking-[2px] opacity-60 mb-1">
+                Listino del giorno
+              </div>
+              <div className="font-display text-2xl font-bold mb-1">
+                {todayPrices.length > 0
+                  ? `${todayPrices.length} prodotti disponibili oggi`
+                  : "Listino in arrivo"}
+              </div>
+              <div className="text-sm text-white/70">
+                {todayPrices.length > 0
+                  ? "Consulta i prezzi €/L e stima il totale della tua richiesta"
+                  : "FA Petroli pubblicherà a breve i prezzi aggiornati"}
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button asChild variant="accent" size="lg">
+                <Link href="/client/listino">Vedi listino →</Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white">
+                <Link href="/client/nuovo-ordine">Invia richiesta</Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Ultime richieste */}
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+            <CardTitle className="text-lg">Ultime richieste</CardTitle>
+            <Link href="/client/storico" className="text-sm font-semibold text-brand-orange hover:underline">
+              Vedi tutte →
             </Link>
-          </div>
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>N° Richiesta</th>
-                  <th>Prodotto</th>
-                  <th>Quantità</th>
-                  <th>Punto consegna</th>
-                  <th>Stato</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lastOrders.length === 0 && (
-                  <tr>
-                    <td colSpan={5}>
-                      <div className="empty-state">
-                        <div className="empty-state-icon">📭</div>
-                        Nessuna richiesta ancora. <br />
-                        <Link
-                          href="/client/nuovo-ordine"
-                          style={{ color: "var(--blue)", fontWeight: 600 }}
-                        >
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-border bg-muted/50">
+                    <th className="text-left font-semibold text-muted-foreground p-3">N° Richiesta</th>
+                    <th className="text-left font-semibold text-muted-foreground p-3">Prodotto</th>
+                    <th className="text-left font-semibold text-muted-foreground p-3">Quantità</th>
+                    <th className="text-left font-semibold text-muted-foreground p-3">Consegna</th>
+                    <th className="text-left font-semibold text-muted-foreground p-3">Stato</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lastOrders.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="p-12 text-center text-muted-foreground">
+                        <div className="text-4xl mb-2">📭</div>
+                        Nessuna richiesta ancora.
+                        <br />
+                        <Link href="/client/nuovo-ordine" className="text-brand-orange font-semibold hover:underline">
                           Invia la tua prima richiesta →
                         </Link>
-                      </div>
-                    </td>
-                  </tr>
-                )}
-                {lastOrders.map((o) => (
-                  <tr key={o.id}>
-                    <td className="td-bold">#{o.code}</td>
-                    <td>{o.product.name}</td>
-                    <td>{formatLitres(o.quantity)}</td>
-                    <td style={{ fontSize: 13, color: "var(--gray-500)" }}>
-                      {o.deliveryPoint.name}
-                    </td>
-                    <td>
-                      <span className={"badge " + statusBadgeClass(o.status)}>
-                        {statusLabel(o.status)}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+                      </td>
+                    </tr>
+                  )}
+                  {lastOrders.map((o) => (
+                    <tr key={o.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
+                      <td className="p-3 font-bold text-brand-blue">#{o.code}</td>
+                      <td className="p-3">{o.product.name}</td>
+                      <td className="p-3">{formatLitres(o.quantity)}</td>
+                      <td className="p-3 text-muted-foreground text-xs">{o.deliveryPoint.name}</td>
+                      <td className="p-3">
+                        <span className={"badge " + statusBadgeClass(o.status)}>
+                          {statusLabel(o.status)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </>
   );
