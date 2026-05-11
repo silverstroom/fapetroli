@@ -53,12 +53,10 @@ export default function LoginForm() {
       );
       return;
     }
-    // Login ok, show loading screen then redirect
+    // Login ok, redirect immediato
     setShowLoader(true);
-    setTimeout(() => {
-      router.push("/");
-      router.refresh();
-    }, 600);
+    router.push("/");
+    router.refresh();
   }
 
   if (showLoader) {

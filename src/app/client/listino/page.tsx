@@ -9,8 +9,6 @@ function todayUTC() {
   return d;
 }
 
-export const dynamic = "force-dynamic";
-
 export default async function ListinoClientPage() {
   const session = await auth();
   const today = todayUTC();

@@ -4,8 +4,6 @@ import Topbar from "@/components/Topbar";
 import Link from "next/link";
 import StoricoTable from "./StoricoTable";
 
-export const dynamic = "force-dynamic";
-
 export default async function StoricoPage() {
   const session = await auth();
   const companyId = session!.user.companyId!;

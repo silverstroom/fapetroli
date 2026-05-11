@@ -3,8 +3,6 @@ import { prisma } from "@/lib/prisma";
 import Topbar from "@/components/Topbar";
 import AdminOrdersTable from "./AdminOrdersTable";
 
-export const dynamic = "force-dynamic";
-
 export default async function AdminOrdiniPage() {
   const session = await auth();
   const orders = await prisma.order.findMany({
