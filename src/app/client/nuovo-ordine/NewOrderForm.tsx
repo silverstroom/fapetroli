@@ -19,12 +19,27 @@ interface DeliveryPoint {
 
 const QTY_PRESETS = [500, 1000, 2000, 5000, 10000, 20000];
 
+function formatEur(n: number) {
+  return new Intl.NumberFormat("it-IT", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
 export default function NewOrderForm({
   products,
   deliveryPoints,
+  priceMap,
+  priceDate,
+  hasPriceList,
 }: {
   products: Product[];
   deliveryPoints: DeliveryPoint[];
+  priceMap: Record<string, number>;
+  priceDate: string;
+  hasPriceList: boolean;
 }) {
   const router = useRouter();
   const [productId, setProductId] = useState<string | null>(null);
@@ -42,6 +57,9 @@ export default function NewOrderForm({
   const selectedProduct = products.find((p) => p.id === productId);
   const selectedDp = deliveryPoints.find((d) => d.id === dpId);
   const effectiveQty = qtyMode === "preset" ? qty : Number(customQty) || 0;
+  const unitPrice = productId ? priceMap[productId] : undefined;
+  const total =
+    unitPrice && effectiveQty ? unitPrice * Number(effectiveQty) : 0;
 
   async function submitOrder() {
     setError(null);
@@ -71,7 +89,7 @@ export default function NewOrderForm({
     setLoading(false);
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Errore durante l'invio dell'ordine.");
+      setError(data.error ?? "Errore durante l'invio della richiesta.");
       return;
     }
     const data = await res.json();
@@ -91,19 +109,19 @@ export default function NewOrderForm({
   if (successCode) {
     return (
       <div className="success-screen">
-        <div className="success-icon">✅</div>
-        <h2 className="success-title">Ordine inviato con successo!</h2>
+        <div className="success-icon">📤</div>
+        <h2 className="success-title">Richiesta inviata con successo!</h2>
         <p className="success-msg">
-          Il tuo ordine è stato trasmesso a FA Petroli. Riceverai una conferma
-          via email e verrai contattato per i dettagli della consegna.
+          La tua richiesta è stata trasmessa a FA Petroli. Riceverai una
+          conferma via email e verrai contattato per i dettagli della consegna.
         </p>
         <div className="success-code">N° {successCode}</div>
         <div className="success-actions">
           <button className="btn-orange" onClick={reset}>
-            + Nuovo ordine
+            ➕ Invia un'altra richiesta
           </button>
           <Link href="/client/storico" className="btn-ghost" style={{ background: "#fff" }}>
-            Vedi storico ordini →
+            Vedi le mie richieste →
           </Link>
         </div>
       </div>
@@ -114,8 +132,8 @@ export default function NewOrderForm({
     return (
       <div className="alert alert-info">
         ℹ️ Nessun punto di consegna configurato. Contatta FA Petroli per
-        aggiungere il tuo primo punto di consegna prima di procedere con un
-        ordine.
+        aggiungere il tuo primo punto di consegna prima di procedere con una
+        richiesta.
       </div>
     );
   }
@@ -125,20 +143,42 @@ export default function NewOrderForm({
       <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
         {error && <div className="alert alert-error">⚠️ {error}</div>}
 
+        {!hasPriceList && (
+          <div className="alert alert-info">
+            ℹ️ Nessun listino ancora pubblicato. Puoi comunque inviare la
+            richiesta: FA Petroli ti comunicherà il prezzo.
+          </div>
+        )}
+
         <div className="order-card">
           <h3>1. Seleziona il prodotto</h3>
           <div className="products-grid">
-            {products.map((p) => (
-              <button
-                key={p.id}
-                className={"prod-tile" + (productId === p.id ? " selected" : "")}
-                onClick={() => setProductId(p.id)}
-                type="button"
-              >
-                <span className="prod-tile-icon">{p.icon ?? "⛽"}</span>
-                <span className="prod-tile-name">{p.name}</span>
-              </button>
-            ))}
+            {products.map((p) => {
+              const price = priceMap[p.id];
+              return (
+                <button
+                  key={p.id}
+                  className={"prod-tile" + (productId === p.id ? " selected" : "")}
+                  onClick={() => setProductId(p.id)}
+                  type="button"
+                >
+                  <span className="prod-tile-icon">{p.icon ?? "⛽"}</span>
+                  <span className="prod-tile-name">{p.name}</span>
+                  {price != null && (
+                    <span
+                      style={{
+                        fontSize: 12,
+                        color: "var(--orange)",
+                        fontWeight: 700,
+                        marginTop: 4,
+                      }}
+                    >
+                      € {price.toFixed(3)}/L
+                    </span>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -222,7 +262,7 @@ export default function NewOrderForm({
 
       <div>
         <div className="order-summary-card">
-          <h3>📋 Riepilogo ordine</h3>
+          <h3>📋 Riepilogo richiesta</h3>
           <div className="summary-row">
             <span className="summary-label">Prodotto</span>
             <span
@@ -246,20 +286,52 @@ export default function NewOrderForm({
             </span>
           </div>
           <div className="summary-row">
+            <span className="summary-label">Prezzo unit.</span>
+            <span
+              className="summary-value"
+              style={{ color: unitPrice ? "#fff" : "rgba(255,255,255,.4)" }}
+            >
+              {unitPrice ? `€ ${unitPrice.toFixed(3)}/L` : "— da definire"}
+            </span>
+          </div>
+          <div className="summary-row">
             <span className="summary-label">Consegna</span>
             <span className="summary-value">
               {selectedDp?.name ?? "— seleziona"}
             </span>
           </div>
-          <div className="summary-row">
-            <span className="summary-label">Note</span>
+          <div className="summary-divider"></div>
+          <div className="summary-row" style={{ marginTop: 4 }}>
+            <span
+              className="summary-label"
+              style={{ fontSize: 14, fontWeight: 700, color: "#fff" }}
+            >
+              Totale stimato
+            </span>
             <span
               className="summary-value"
-              style={{ color: notes ? "#fff" : "rgba(255,255,255,.4)" }}
+              style={{
+                fontSize: 22,
+                fontWeight: 800,
+                color: total ? "var(--orange)" : "rgba(255,255,255,.4)",
+              }}
             >
-              {notes ? notes.substring(0, 50) + (notes.length > 50 ? "…" : "") : "Nessuna nota"}
+              {total ? formatEur(total) : "—"}
             </span>
           </div>
+          {hasPriceList && unitPrice != null && (
+            <div
+              style={{
+                fontSize: 11,
+                color: "rgba(255,255,255,.45)",
+                marginTop: 4,
+                textAlign: "right",
+              }}
+            >
+              Listino del{" "}
+              {new Date(priceDate + "T00:00:00").toLocaleDateString("it-IT")}
+            </div>
+          )}
           <div className="summary-divider"></div>
           <div
             style={{
@@ -271,13 +343,16 @@ export default function NewOrderForm({
             📧 Conferma via email immediata
             <br />
             📞 FA Petroli ti contatterà per i dettagli consegna
+            <br />
+            ❌ Puoi annullare la richiesta in qualsiasi momento prima
+            dell'evasione
           </div>
           <button
             className="btn-submit"
             onClick={submitOrder}
             disabled={loading}
           >
-            {loading ? "Invio..." : "Invia ordine a FA Petroli →"}
+            {loading ? "Invio..." : "Invia richiesta a FA Petroli →"}
           </button>
         </div>
       </div>

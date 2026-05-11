@@ -52,6 +52,21 @@ export async function POST(req: Request) {
     );
   }
 
+  // Snapshot del prezzo dal listino del giorno (o ultimo disponibile)
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+  let dailyPrice = await prisma.dailyPrice.findUnique({
+    where: { productId_date: { productId: data.productId, date: today } },
+  });
+  if (!dailyPrice) {
+    dailyPrice = await prisma.dailyPrice.findFirst({
+      where: { productId: data.productId, date: { lte: today } },
+      orderBy: { date: "desc" },
+    });
+  }
+  const unitPrice = dailyPrice?.price ?? null;
+  const totalAmount = unitPrice != null ? unitPrice * data.quantity : null;
+
   // Genera codice ordine progressivo
   const count = await prisma.order.count();
   const code = "ORD-" + String(count + 1).padStart(4, "0");
@@ -60,6 +75,8 @@ export async function POST(req: Request) {
     data: {
       code,
       quantity: data.quantity,
+      unitPrice,
+      totalAmount,
       notes: data.notes || null,
       userId: session.user.id,
       companyId,

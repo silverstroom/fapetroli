@@ -6,8 +6,9 @@ import { prisma } from "@/lib/prisma";
 
 const profileSchema = z.object({
   type: z.literal("profile"),
-  name: z.string().min(2),
-  phone: z.string().optional(),
+  firstName: z.string().min(1, "Nome obbligatorio"),
+  lastName: z.string().min(1, "Cognome obbligatorio"),
+  phone: z.string().min(6, "Telefono obbligatorio"),
   pec: z.string().email().optional().or(z.literal("")),
   indirizzo: z.string().optional(),
   citta: z.string().optional(),
@@ -35,10 +36,16 @@ export async function PATCH(req: Request) {
       );
     const d = parsed.data;
 
+    const fullName = `${d.firstName} ${d.lastName}`.trim();
     await prisma.$transaction([
       prisma.user.update({
         where: { id: session.user.id },
-        data: { name: d.name, phone: d.phone || null },
+        data: {
+          name: fullName,
+          firstName: d.firstName,
+          lastName: d.lastName,
+          phone: d.phone,
+        },
       }),
       ...(session.user.companyId
         ? [

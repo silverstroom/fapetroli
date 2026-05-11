@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import Topbar from "@/components/Topbar";
 import AdminOrdersTable from "./AdminOrdersTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminOrdiniPage() {
   const session = await auth();
   const orders = await prisma.order.findMany({
@@ -16,9 +18,13 @@ export default async function AdminOrdiniPage() {
     date: o.createdAt.toISOString(),
     product: o.product.name,
     quantity: o.quantity,
+    unitPrice: o.unitPrice,
+    totalAmount: o.totalAmount,
     dpName: o.deliveryPoint.name,
     company: o.company.ragioneSociale,
     user: o.user.name,
+    userPhone: o.user.phone,
+    userEmail: o.user.email,
     status: o.status,
     notes: o.notes,
   }));
@@ -26,16 +32,16 @@ export default async function AdminOrdiniPage() {
   return (
     <>
       <Topbar
-        title="Tutti gli Ordini"
+        title="Richieste / Ordini"
         userName={session!.user.name ?? "Admin"}
       />
       <div className="content">
         <div className="page-header">
           <div>
-            <h2>Tutti gli Ordini</h2>
+            <h2>Richieste & Ordini 📦</h2>
             <p>
-              Visualizza, gestisci e aggiorna lo stato di tutti gli ordini
-              ricevuti
+              Visualizza, gestisci e aggiorna lo stato di tutte le richieste
+              ricevute dai clienti
             </p>
           </div>
         </div>

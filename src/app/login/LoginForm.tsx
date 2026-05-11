@@ -8,7 +8,9 @@ function LoadingScreen() {
   const text = "Accesso in corso...";
   return (
     <div className="loading-screen">
-      <div className="loading-screen-logo">FA</div>
+      <div className="loading-screen-logo has-logo">
+        <img src="/logo.jpg" alt="FA Petroli" />
+      </div>
       <div className="loading-screen-text">
         {text.split("").map((ch, i) => (
           <span key={i} className="loading-screen-letter">

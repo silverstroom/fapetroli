@@ -2283,3 +2283,24 @@ tbody tr:last-child td {
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.5px;
 }
+
+/* ════════════════════════════════════════════════
+   FA Petroli — Logo image overrides
+   ════════════════════════════════════════════════ */
+.sidebar-brand-icon.has-logo,
+.login-v2-logo-icon.has-logo,
+.login-v2-logo-icon-sm.has-logo,
+.loading-screen-logo.has-logo {
+  background: #fff;
+  padding: 4px;
+  overflow: hidden;
+}
+.sidebar-brand-icon.has-logo img,
+.login-v2-logo-icon.has-logo img,
+.login-v2-logo-icon-sm.has-logo img,
+.loading-screen-logo.has-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}

@@ -28,7 +28,9 @@ model User {
   id           String     @id @default(cuid())
   email        String     @unique
   passwordHash String
-  name         String
+  name         String     // legacy: visualizzato in UI = firstName + " " + lastName
+  firstName    String?
+  lastName     String?
   phone        String?
   role         Role       @default(CLIENT)
   status       UserStatus @default(PENDING)
@@ -94,11 +96,30 @@ model Product {
   active    Boolean  @default(true)
   createdAt DateTime @default(now())
 
-  orders    Order[]
+  orders       Order[]
+  dailyPrices  DailyPrice[]
 }
 
 // ════════════════════════════════════════════════════════════════
-// ORDER - ordini effettuati dai clienti
+// DAILY PRICE - listino prezzi giornaliero (€/litro)
+// ════════════════════════════════════════════════════════════════
+model DailyPrice {
+  id        String   @id @default(cuid())
+  date      DateTime @db.Date
+  price     Float    // €/litro
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId String
+
+  @@unique([productId, date])
+  @@index([date])
+}
+
+// ════════════════════════════════════════════════════════════════
+// ORDER - richieste / ordini effettuati dai clienti
 // ════════════════════════════════════════════════════════════════
 enum OrderStatus {
   WAITING     // In attesa
@@ -111,6 +132,8 @@ model Order {
   id          String      @id @default(cuid())
   code        String      @unique // es. ORD-0042
   quantity    Int         // litri
+  unitPrice   Float?      // €/litro al momento della richiesta (snapshot listino)
+  totalAmount Float?      // quantity * unitPrice (snapshot)
   notes       String?
   status      OrderStatus @default(WAITING)
   createdAt   DateTime    @default(now())

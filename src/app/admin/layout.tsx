@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import Sidebar from "@/components/Sidebar";
 
 export default async function AdminLayout({
@@ -11,10 +12,18 @@ export default async function AdminLayout({
   if (!session?.user) redirect("/login");
   if (session.user.role !== "ADMIN") redirect("/client/dashboard");
 
+  const waitingOrders = await prisma.order.count({ where: { status: "WAITING" } });
+
   const links = [
     { href: "/admin", icon: "📊", label: "Dashboard" },
     { href: "/admin/clienti", icon: "👥", label: "Clienti" },
-    { href: "/admin/ordini", icon: "📦", label: "Tutti gli Ordini" },
+    {
+      href: "/admin/ordini",
+      icon: "📦",
+      label: "Richieste / Ordini",
+      badge: waitingOrders > 0 ? String(waitingOrders) : undefined,
+    },
+    { href: "/admin/listino", icon: "💶", label: "Listino prezzi" },
     { href: "/admin/prodotti", icon: "⛽", label: "Prodotti" },
     { href: "/admin/punti-consegna", icon: "📍", label: "Punti Consegna" },
   ];

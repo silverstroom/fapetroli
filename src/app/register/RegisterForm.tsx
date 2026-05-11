@@ -4,7 +4,8 @@ import { useState } from "react";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     phone: "",
     password: "",
@@ -59,31 +60,43 @@ export default function RegisterForm() {
 
       <div className="form-row">
         <div className="form-group">
-          <label>Nome e cognome</label>
+          <label>Nome</label>
           <input
             required
-            value={form.name}
-            onChange={(e) => update("name", e.target.value)}
+            value={form.firstName}
+            onChange={(e) => update("firstName", e.target.value)}
           />
         </div>
         <div className="form-group">
-          <label>Telefono</label>
+          <label>Cognome</label>
           <input
-            type="tel"
-            value={form.phone}
-            onChange={(e) => update("phone", e.target.value)}
+            required
+            value={form.lastName}
+            onChange={(e) => update("lastName", e.target.value)}
           />
         </div>
       </div>
 
-      <div className="form-group">
-        <label>Email aziendale</label>
-        <input
-          type="email"
-          required
-          value={form.email}
-          onChange={(e) => update("email", e.target.value)}
-        />
+      <div className="form-row">
+        <div className="form-group">
+          <label>Telefono</label>
+          <input
+            type="tel"
+            required
+            placeholder="es. 333 1234567"
+            value={form.phone}
+            onChange={(e) => update("phone", e.target.value)}
+          />
+        </div>
+        <div className="form-group">
+          <label>Email aziendale</label>
+          <input
+            type="email"
+            required
+            value={form.email}
+            onChange={(e) => update("email", e.target.value)}
+          />
+        </div>
       </div>
 
       <div className="form-group">

@@ -17,6 +17,7 @@ export default async function AdminDashboard() {
     litresThisMonth,
     recentOrders,
     pendingClientsList,
+    waitingOrdersList,
   ] = await Promise.all([
     prisma.user.count({ where: { role: "CLIENT", status: "ACTIVE" } }),
     prisma.user.count({ where: { role: "CLIENT", status: "PENDING" } }),
@@ -36,6 +37,12 @@ export default async function AdminDashboard() {
       include: { company: true },
       orderBy: { createdAt: "desc" },
       take: 5,
+    }),
+    prisma.order.findMany({
+      where: { status: "WAITING" },
+      orderBy: { createdAt: "desc" },
+      take: 8,
+      include: { product: true, company: true, user: true },
     }),
   ]);
 
@@ -66,11 +73,19 @@ export default async function AdminDashboard() {
               {pendingClients > 0 ? "Richiede azione" : "Nessuna richiesta"}
             </div>
           </div>
+          <div className={"kpi-card " + (waitingOrders > 0 ? "orange" : "green")}>
+            <div className="kpi-icon">📤</div>
+            <div className="kpi-label">Nuove richieste</div>
+            <div className="kpi-value">{waitingOrders}</div>
+            <div className="kpi-sub">
+              {waitingOrders > 0 ? "Da gestire subito" : "Tutto evaso"}
+            </div>
+          </div>
           <div className="kpi-card green">
             <div className="kpi-icon">📦</div>
             <div className="kpi-label">Ordini questo mese</div>
             <div className="kpi-value">{ordersThisMonth}</div>
-            <div className="kpi-sub">{waitingOrders} in attesa</div>
+            <div className="kpi-sub">Totale richieste mese</div>
           </div>
           <div className="kpi-card blue">
             <div className="kpi-icon">🛢️</div>
@@ -81,6 +96,63 @@ export default async function AdminDashboard() {
             <div className="kpi-sub">Tutti i clienti</div>
           </div>
         </div>
+
+        {waitingOrders > 0 && (
+          <div className="card" style={{ marginBottom: 20, borderLeft: "4px solid var(--orange)" }}>
+            <div className="card-header">
+              <span className="card-title">
+                📤 Nuove richieste da gestire ({waitingOrders})
+              </span>
+              <Link href="/admin/ordini" className="card-link">
+                Gestisci tutte →
+              </Link>
+            </div>
+            <div className="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>N°</th>
+                    <th>Cliente</th>
+                    <th>Prodotto</th>
+                    <th>Quantità</th>
+                    <th>Totale stim.</th>
+                    <th>Inviata</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {waitingOrdersList.map((o) => (
+                    <tr key={o.id}>
+                      <td className="td-bold">#{o.code}</td>
+                      <td>
+                        <div style={{ fontWeight: 600 }}>
+                          {o.company.ragioneSociale}
+                        </div>
+                        <div style={{ fontSize: 12, color: "var(--gray-500)" }}>
+                          {o.user.name}
+                        </div>
+                      </td>
+                      <td>{o.product.name}</td>
+                      <td>{formatLitres(o.quantity)}</td>
+                      <td style={{ color: "var(--orange)", fontWeight: 700 }}>
+                        {o.totalAmount != null
+                          ? "€ " + o.totalAmount.toFixed(2)
+                          : "—"}
+                      </td>
+                      <td style={{ fontSize: 13, color: "var(--gray-500)" }}>
+                        {new Date(o.createdAt).toLocaleString("it-IT", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
 
         {pendingClients > 0 && (
           <div className="card" style={{ marginBottom: 20 }}>

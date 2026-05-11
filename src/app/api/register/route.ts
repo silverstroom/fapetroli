@@ -5,9 +5,10 @@ import { prisma } from "@/lib/prisma";
 import { Role, UserStatus } from "@prisma/client";
 
 const schema = z.object({
-  name: z.string().min(2),
+  firstName: z.string().min(1, "Nome obbligatorio"),
+  lastName: z.string().min(1, "Cognome obbligatorio"),
   email: z.string().email(),
-  phone: z.string().optional(),
+  phone: z.string().min(6, "Numero di telefono obbligatorio"),
   password: z.string().min(8),
   ragioneSociale: z.string().min(2),
   partitaIva: z.string().min(11).max(16),
@@ -28,6 +29,7 @@ export async function POST(req: Request) {
     }
     const data = parsed.data;
     const email = data.email.toLowerCase();
+    const fullName = `${data.firstName} ${data.lastName}`.trim();
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
@@ -49,7 +51,6 @@ export async function POST(req: Request) {
 
     const passwordHash = await bcrypt.hash(data.password, 12);
 
-    // Crea Company + User in transazione
     const result = await prisma.$transaction(async (tx) => {
       const company = await tx.company.create({
         data: {
@@ -62,9 +63,11 @@ export async function POST(req: Request) {
       });
       const user = await tx.user.create({
         data: {
-          name: data.name,
+          name: fullName,
+          firstName: data.firstName,
+          lastName: data.lastName,
           email,
-          phone: data.phone || null,
+          phone: data.phone,
           passwordHash,
           role: Role.CLIENT,
           status: UserStatus.PENDING,

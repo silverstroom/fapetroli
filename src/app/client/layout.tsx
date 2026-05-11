@@ -20,9 +20,10 @@ export default async function ClientLayout({
 
   const links = [
     { href: "/client/dashboard", icon: "🏠", label: "Dashboard" },
-    { href: "/client/nuovo-ordine", icon: "📦", label: "Nuovo Ordine", badge: "+" },
-    { href: "/client/storico", icon: "📋", label: "Storico Ordini" },
-    { href: "/client/profilo", icon: "🏢", label: "Profilo Cliente" },
+    { href: "/client/listino", icon: "💶", label: "Listino prezzi" },
+    { href: "/client/nuovo-ordine", icon: "📤", label: "Invia richiesta", badge: "+" },
+    { href: "/client/storico", icon: "📋", label: "Le mie richieste" },
+    { href: "/client/profilo", icon: "🏢", label: "Profilo & impostazioni" },
   ];
 
   return (

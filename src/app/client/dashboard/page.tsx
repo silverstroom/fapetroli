@@ -54,19 +54,19 @@ export default async function DashboardPage() {
         <div className="kpi-grid">
           <div className="kpi-card blue">
             <div className="kpi-icon">📦</div>
-            <div className="kpi-label">Ordini questo mese</div>
+            <div className="kpi-label">Richieste questo mese</div>
             <div className="kpi-value">{ordersThisMonth}</div>
             <div className="kpi-sub">Aggiornato in tempo reale</div>
           </div>
           <div className="kpi-card orange">
             <div className="kpi-icon">🛢️</div>
-            <div className="kpi-label">Litri ordinati (anno in corso)</div>
+            <div className="kpi-label">Litri richiesti (anno in corso)</div>
             <div className="kpi-value">{formatLitres(litresYear)}</div>
             <div className="kpi-sub">Dal 1° gennaio</div>
           </div>
           <div className="kpi-card green">
             <div className="kpi-icon">✅</div>
-            <div className="kpi-label">Ordini evasi (mese)</div>
+            <div className="kpi-label">Richieste evase (mese)</div>
             <div className="kpi-value">
               {deliveredCount} / {totalCount}
             </div>
@@ -76,9 +76,29 @@ export default async function DashboardPage() {
           </div>
         </div>
 
+        <div className="card" style={{ marginBottom: 20, background: "linear-gradient(135deg, #1a3a5c 0%, #15243d 100%)", color: "#fff", border: "none" }}>
+          <div style={{ padding: 24, display: "flex", alignItems: "center", gap: 20, flexWrap: "wrap" }}>
+            <div style={{ fontSize: 40 }}>💶</div>
+            <div style={{ flex: 1, minWidth: 200 }}>
+              <div style={{ fontSize: 13, opacity: 0.7, textTransform: "uppercase", letterSpacing: 1, marginBottom: 4 }}>
+                Listino prezzi del giorno
+              </div>
+              <div style={{ fontSize: 18, fontWeight: 700 }}>
+                Controlla i prezzi aggiornati e fai una stima
+              </div>
+            </div>
+            <Link href="/client/listino" className="btn-orange">
+              Vedi listino →
+            </Link>
+            <Link href="/client/nuovo-ordine" className="btn-ghost" style={{ background: "rgba(255,255,255,0.1)", color: "#fff", border: "1px solid rgba(255,255,255,0.2)" }}>
+              Invia richiesta
+            </Link>
+          </div>
+        </div>
+
         <div className="card">
           <div className="card-header">
-            <span className="card-title">Ultimi ordini</span>
+            <span className="card-title">Ultime richieste</span>
             <Link className="card-link" href="/client/storico">
               Vedi tutti →
             </Link>
@@ -87,7 +107,7 @@ export default async function DashboardPage() {
             <table>
               <thead>
                 <tr>
-                  <th>N° Ordine</th>
+                  <th>N° Richiesta</th>
                   <th>Prodotto</th>
                   <th>Quantità</th>
                   <th>Punto consegna</th>
@@ -100,12 +120,12 @@ export default async function DashboardPage() {
                     <td colSpan={5}>
                       <div className="empty-state">
                         <div className="empty-state-icon">📭</div>
-                        Nessun ordine ancora. <br />
+                        Nessuna richiesta ancora. <br />
                         <Link
                           href="/client/nuovo-ordine"
                           style={{ color: "var(--blue)", fontWeight: 600 }}
                         >
-                          Crea il tuo primo ordine →
+                          Invia la tua prima richiesta →
                         </Link>
                       </div>
                     </td>

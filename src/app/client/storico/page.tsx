@@ -4,6 +4,8 @@ import Topbar from "@/components/Topbar";
 import Link from "next/link";
 import StoricoTable from "./StoricoTable";
 
+export const dynamic = "force-dynamic";
+
 export default async function StoricoPage() {
   const session = await auth();
   const companyId = session!.user.companyId!;
@@ -24,6 +26,8 @@ export default async function StoricoPage() {
     productName: o.product.name,
     productId: o.product.id,
     quantity: o.quantity,
+    unitPrice: o.unitPrice,
+    totalAmount: o.totalAmount,
     dpName: o.deliveryPoint.name,
     status: o.status,
     notes: o.notes,
@@ -31,15 +35,15 @@ export default async function StoricoPage() {
 
   return (
     <>
-      <Topbar title="Storico Ordini" userName={session!.user.name ?? "Cliente"} />
+      <Topbar title="Le mie richieste" userName={session!.user.name ?? "Cliente"} />
       <div className="content">
         <div className="page-header">
           <div>
-            <h2>Storico Ordini</h2>
-            <p>Visualizza e monitora tutti i tuoi ordini</p>
+            <h2>Le mie richieste 📋</h2>
+            <p>Visualizza, monitora e gestisci tutte le tue richieste</p>
           </div>
           <Link href="/client/nuovo-ordine" className="btn-orange">
-            + Nuovo ordine
+            ➕ Invia richiesta
           </Link>
         </div>
         <StoricoTable orders={plain} products={products} />

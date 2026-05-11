@@ -16,12 +16,15 @@ export default async function ProfiloPage() {
 
   return (
     <>
-      <Topbar title="Profilo Cliente" userName={user.name} />
+      <Topbar title="Profilo & impostazioni" userName={user.name} />
       <div className="content">
         <div className="page-header">
           <div>
-            <h2>Profilo Cliente</h2>
-            <p>Gestisci i tuoi dati aziendali e i punti di consegna</p>
+            <h2>Profilo & impostazioni ⚙️</h2>
+            <p>
+              Gestisci i tuoi dati personali, l'azienda, i punti di consegna e
+              la sicurezza dell'account
+            </p>
           </div>
         </div>
 
@@ -45,6 +48,8 @@ export default async function ProfiloPage() {
             user={{
               id: user.id,
               name: user.name,
+              firstName: user.firstName,
+              lastName: user.lastName,
               email: user.email,
               phone: user.phone,
             }}

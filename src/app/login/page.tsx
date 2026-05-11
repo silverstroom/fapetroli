@@ -9,7 +9,9 @@ export default function LoginPage() {
           <div className="login-v2-dots" />
           <div className="login-v2-left-content">
             <div className="login-v2-logo">
-              <div className="login-v2-logo-icon">FA</div>
+              <div className="login-v2-logo-icon has-logo">
+                <img src="/logo.jpg" alt="FA Petroli" />
+              </div>
             </div>
             <h2 className="login-v2-brand-title">FA Petroli</h2>
             <p className="login-v2-brand-sub">Portale Clienti B2B</p>
@@ -41,7 +43,9 @@ export default function LoginPage() {
         {/* Right side - Form */}
         <div className="login-v2-right">
           <div className="login-v2-mobile-brand">
-            <div className="login-v2-logo-icon-sm">FA</div>
+            <div className="login-v2-logo-icon-sm has-logo">
+              <img src="/logo.jpg" alt="FA Petroli" />
+            </div>
             <div>
               <div className="login-v2-mobile-title">FA Petroli</div>
               <div className="login-v2-mobile-sub">Portale Clienti B2B</div>

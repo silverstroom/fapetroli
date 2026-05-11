@@ -51,7 +51,9 @@ export default function Sidebar({
       />
       <aside className={"sidebar" + (open ? " open" : "")}>
         <div className="sidebar-brand">
-          <div className="sidebar-brand-icon">FA</div>
+          <div className="sidebar-brand-icon has-logo">
+            <img src="/logo.jpg" alt="FA Petroli" />
+          </div>
           <div className="sidebar-brand-text">
             FA Petroli <small>{brandSubtitle}</small>
           </div>

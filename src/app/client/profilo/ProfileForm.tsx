@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 interface UserData {
   id: string;
   name: string;
+  firstName: string | null;
+  lastName: string | null;
   email: string;
   phone: string | null;
 }
@@ -18,6 +20,17 @@ interface CompanyData {
   citta: string | null;
 }
 
+// Splitta il vecchio campo "name" se firstName/lastName sono ancora null
+function splitFallback(name: string): { firstName: string; lastName: string } {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0) return { firstName: "", lastName: "" };
+  if (parts.length === 1) return { firstName: parts[0], lastName: "" };
+  return {
+    firstName: parts[0],
+    lastName: parts.slice(1).join(" "),
+  };
+}
+
 export default function ProfileForm({
   user,
   company,
@@ -27,8 +40,11 @@ export default function ProfileForm({
 }) {
   const router = useRouter();
   const [editMode, setEditMode] = useState(false);
+
+  const fallback = splitFallback(user.name);
   const [form, setForm] = useState({
-    name: user.name,
+    firstName: user.firstName ?? fallback.firstName,
+    lastName: user.lastName ?? fallback.lastName,
     phone: user.phone ?? "",
     pec: company.pec ?? "",
     indirizzo: company.indirizzo ?? "",
@@ -37,11 +53,18 @@ export default function ProfileForm({
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
 
-  // password change
   const [pw, setPw] = useState({ current: "", next: "", confirm: "" });
 
   async function save() {
     setMsg(null);
+    if (!form.firstName.trim() || !form.lastName.trim()) {
+      setMsg({ type: "error", text: "Nome e cognome sono obbligatori." });
+      return;
+    }
+    if (!form.phone.trim() || form.phone.trim().length < 6) {
+      setMsg({ type: "error", text: "Inserisci un numero di telefono valido." });
+      return;
+    }
     setLoading(true);
     const res = await fetch("/api/profile", {
       method: "PATCH",
@@ -156,21 +179,32 @@ export default function ProfileForm({
           <span className="card-title">👤 Referente principale</span>
         </div>
         <div className="profile-card-body">
-          <div className="form-group">
-            <label>Nome e cognome</label>
-            <input
-              type="text"
-              value={form.name}
-              disabled={!editMode}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-            />
+          <div className="form-row">
+            <div className="form-group">
+              <label>Nome *</label>
+              <input
+                type="text"
+                value={form.firstName}
+                disabled={!editMode}
+                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label>Cognome *</label>
+              <input
+                type="text"
+                value={form.lastName}
+                disabled={!editMode}
+                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+              />
+            </div>
           </div>
           <div className="form-group">
             <label>Email</label>
             <input type="email" value={user.email} disabled />
           </div>
           <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Telefono</label>
+            <label>Telefono *</label>
             <input
               type="tel"
               value={form.phone}
@@ -183,22 +217,28 @@ export default function ProfileForm({
 
       <div className="profile-card">
         <div className="card-header">
-          <span className="card-title">🔐 Sicurezza account</span>
+          <span className="card-title">🔐 Sicurezza & password</span>
         </div>
         <div className="profile-card-body">
+          <p style={{ fontSize: 13, color: "var(--gray-500)", marginBottom: 16 }}>
+            Cambia la tua password regolarmente per mantenere l'account
+            sicuro.
+          </p>
           <div className="form-group">
             <label>Password attuale</label>
             <input
               type="password"
               value={pw.current}
+              autoComplete="current-password"
               onChange={(e) => setPw({ ...pw, current: e.target.value })}
             />
           </div>
           <div className="form-group">
-            <label>Nuova password</label>
+            <label>Nuova password (min 8 caratteri)</label>
             <input
               type="password"
               value={pw.next}
+              autoComplete="new-password"
               onChange={(e) => setPw({ ...pw, next: e.target.value })}
             />
           </div>
@@ -207,6 +247,7 @@ export default function ProfileForm({
             <input
               type="password"
               value={pw.confirm}
+              autoComplete="new-password"
               onChange={(e) => setPw({ ...pw, confirm: e.target.value })}
             />
           </div>
@@ -214,9 +255,9 @@ export default function ProfileForm({
             className="btn-secondary"
             style={{ width: "100%" }}
             onClick={changePassword}
-            disabled={loading}
+            disabled={loading || !pw.current || !pw.next || !pw.confirm}
           >
-            Aggiorna password
+            🔒 Aggiorna password
           </button>
         </div>
       </div>
