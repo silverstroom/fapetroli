@@ -10,6 +10,7 @@ export interface NavLink {
   icon: string;
   label: string;
   badge?: string;
+  exact?: boolean;
 }
 
 interface Props {
@@ -73,8 +74,9 @@ export default function Sidebar({
         <nav className="sidebar-nav">
           <div className="sidebar-section-label">{sectionLabel}</div>
           {links.map((l) => {
-            const active =
-              pathname === l.href || pathname.startsWith(l.href + "/");
+            const active = l.exact
+              ? pathname === l.href
+              : pathname === l.href || pathname.startsWith(l.href + "/");
             return (
               <Link
                 key={l.href}

@@ -15,7 +15,7 @@ export default async function AdminLayout({
   const waitingOrders = await prisma.order.count({ where: { status: "WAITING" } });
 
   const links = [
-    { href: "/admin", icon: "📊", label: "Dashboard" },
+    { href: "/admin", icon: "📊", label: "Dashboard", exact: true },
     { href: "/admin/clienti", icon: "👥", label: "Clienti" },
     {
       href: "/admin/ordini",
