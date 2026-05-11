@@ -14,6 +14,8 @@ export default async function ClientiPage() {
   const plain = clients.map((c) => ({
     id: c.id,
     name: c.name,
+    firstName: c.firstName,
+    lastName: c.lastName,
     email: c.email,
     phone: c.phone,
     status: c.status,
@@ -23,6 +25,8 @@ export default async function ClientiPage() {
           id: c.company.id,
           ragioneSociale: c.company.ragioneSociale,
           partitaIva: c.company.partitaIva,
+          pec: c.company.pec,
+          indirizzo: c.company.indirizzo,
           citta: c.company.citta,
           ordersCount: c.company._count.orders,
         }
@@ -40,7 +44,8 @@ export default async function ClientiPage() {
           <div>
             <h2>Gestione Clienti</h2>
             <p>
-              Approva nuove registrazioni, sospendi o riattiva account esistenti
+              Approva nuove registrazioni, modifica dati, resetta password,
+              sospendi o riattiva account
             </p>
           </div>
         </div>
