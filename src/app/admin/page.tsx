@@ -6,6 +6,17 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Users,
+  Clock,
+  Send,
+  Package,
+  Droplets,
+  ArrowRight,
+  AlertTriangle,
+  Inbox,
+  LucideIcon,
+} from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await auth();
@@ -49,12 +60,12 @@ export default async function AdminDashboard() {
     }),
   ]);
 
-  const kpis = [
-    { icon: "👥", label: "Clienti attivi", value: totalClients, sub: "Account approvati", tone: "blue" },
-    { icon: "⏳", label: "In attesa approvazione", value: pendingClients, sub: pendingClients > 0 ? "Richiede azione" : "Nessuna richiesta", tone: pendingClients > 0 ? "orange" : "blue" },
-    { icon: "📤", label: "Nuove richieste", value: waitingOrders, sub: waitingOrders > 0 ? "Da gestire subito" : "Tutto evaso", tone: waitingOrders > 0 ? "orange" : "green" },
-    { icon: "📦", label: "Richieste questo mese", value: ordersThisMonth, sub: "Totale ricevute", tone: "blue" },
-    { icon: "🛢️", label: "Litri (mese)", value: formatLitres(litresThisMonth._sum.quantity ?? 0), sub: "Tutti i clienti", tone: "blue" },
+  const kpis: { Icon: LucideIcon; label: string; value: React.ReactNode; sub: string; tone: "blue" | "orange" | "green" }[] = [
+    { Icon: Users, label: "Clienti attivi", value: totalClients, sub: "Account approvati", tone: "blue" },
+    { Icon: Clock, label: "In attesa approvazione", value: pendingClients, sub: pendingClients > 0 ? "Richiede azione" : "Nessuna richiesta", tone: pendingClients > 0 ? "orange" : "blue" },
+    { Icon: Send, label: "Nuove richieste", value: waitingOrders, sub: waitingOrders > 0 ? "Da gestire subito" : "Tutto evaso", tone: waitingOrders > 0 ? "orange" : "green" },
+    { Icon: Package, label: "Richieste questo mese", value: ordersThisMonth, sub: "Totale ricevute", tone: "blue" },
+    { Icon: Droplets, label: "Litri (mese)", value: formatLitres(litresThisMonth._sum.quantity ?? 0), sub: "Tutti i clienti", tone: "blue" },
   ];
 
   return (
@@ -63,7 +74,7 @@ export default async function AdminDashboard() {
       <div className="content font-sans">
         <div className="mb-6">
           <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
-            Pannello di controllo 🎛️
+            Pannello di controllo
           </h2>
           <p className="text-muted-foreground">
             Gestisci clienti, ordini e configurazione del portale
@@ -71,43 +82,58 @@ export default async function AdminDashboard() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 mb-6">
-          {kpis.map((k) => (
-            <Card
-              key={k.label}
-              className={
-                k.tone === "orange"
-                  ? "border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent"
-                  : k.tone === "green"
-                  ? "border-emerald-200 bg-emerald-50/50"
-                  : ""
-              }
-            >
-              <CardContent className="p-5">
-                <div className="text-2xl mb-2">{k.icon}</div>
-                <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1 leading-tight">
-                  {k.label}
-                </div>
-                <div className={
-                  "font-display text-3xl font-extrabold " +
-                  (k.tone === "orange" ? "text-brand-orange-dark" : k.tone === "green" ? "text-emerald-700" : "text-brand-blue")
-                }>
-                  {k.value}
-                </div>
-                <div className="text-[11px] text-muted-foreground mt-1.5">{k.sub}</div>
-              </CardContent>
-            </Card>
-          ))}
+          {kpis.map((k) => {
+            const Icon = k.Icon;
+            const iconBg =
+              k.tone === "orange"
+                ? "bg-brand-orange/10 text-brand-orange-dark"
+                : k.tone === "green"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-brand-blue/10 text-brand-blue";
+            return (
+              <Card
+                key={k.label}
+                className={
+                  k.tone === "orange"
+                    ? "border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent"
+                    : k.tone === "green"
+                    ? "border-emerald-200 bg-emerald-50/50"
+                    : ""
+                }
+              >
+                <CardContent className="p-5">
+                  <div className={"h-10 w-10 rounded-xl flex items-center justify-center mb-3 " + iconBg}>
+                    <Icon className="h-5 w-5" strokeWidth={1.75} />
+                  </div>
+                  <div className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground mb-1 leading-tight">
+                    {k.label}
+                  </div>
+                  <div className={
+                    "font-display text-3xl font-extrabold " +
+                    (k.tone === "orange" ? "text-brand-orange-dark" : k.tone === "green" ? "text-emerald-700" : "text-brand-blue")
+                  }>
+                    {k.value}
+                  </div>
+                  <div className="text-[11px] text-muted-foreground mt-1.5">{k.sub}</div>
+                </CardContent>
+              </Card>
+            );
+          })}
         </div>
 
         {waitingOrders > 0 && (
           <Card className="mb-6 border-l-4 border-l-brand-orange">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                📤 Nuove richieste da gestire
+                <Send className="h-5 w-5 text-brand-orange" />
+                Nuove richieste da gestire
                 <Badge variant="accent">{waitingOrders}</Badge>
               </CardTitle>
               <Button asChild variant="accent" size="sm">
-                <Link href="/admin/ordini">Gestisci tutte →</Link>
+                <Link href="/admin/ordini">
+                  Gestisci tutte
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
               </Button>
             </CardHeader>
             <CardContent className="p-0">
@@ -154,11 +180,12 @@ export default async function AdminDashboard() {
           <Card className="mb-6">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                ⚠️ Clienti in attesa di approvazione
+                <AlertTriangle className="h-5 w-5 text-amber-600" />
+                Clienti in attesa di approvazione
                 <Badge variant="warning">{pendingClients}</Badge>
               </CardTitle>
-              <Link href="/admin/clienti" className="text-sm font-semibold text-brand-orange hover:underline">
-                Gestisci tutti →
+              <Link href="/admin/clienti" className="text-sm font-semibold text-brand-orange hover:underline inline-flex items-center gap-1">
+                Gestisci tutti <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </CardHeader>
             <CardContent className="p-0">
@@ -195,8 +222,8 @@ export default async function AdminDashboard() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3">
             <CardTitle className="text-lg">Richieste recenti</CardTitle>
-            <Link href="/admin/ordini" className="text-sm font-semibold text-brand-orange hover:underline">
-              Vedi tutte →
+            <Link href="/admin/ordini" className="text-sm font-semibold text-brand-orange hover:underline inline-flex items-center gap-1">
+              Vedi tutte <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="p-0">
@@ -216,7 +243,7 @@ export default async function AdminDashboard() {
                   {recentOrders.length === 0 && (
                     <tr>
                       <td colSpan={6} className="p-12 text-center text-muted-foreground">
-                        <div className="text-4xl mb-2">📭</div>
+                        <Inbox className="h-10 w-10 mx-auto mb-3 text-muted-foreground/60" strokeWidth={1.5} />
                         Nessuna richiesta ancora.
                       </td>
                     </tr>

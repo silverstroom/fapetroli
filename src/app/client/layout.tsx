@@ -2,6 +2,13 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Sidebar from "@/components/Sidebar";
+import {
+  LayoutDashboard,
+  Wallet,
+  Send,
+  FileText,
+  Settings,
+} from "lucide-react";
 
 export default async function ClientLayout({
   children,
@@ -18,12 +25,13 @@ export default async function ClientLayout({
       })
     : null;
 
+  const ico = "h-[18px] w-[18px]";
   const links = [
-    { href: "/client/dashboard", icon: "🏠", label: "Dashboard" },
-    { href: "/client/listino", icon: "💶", label: "Listino prezzi" },
-    { href: "/client/nuovo-ordine", icon: "📤", label: "Invia richiesta", badge: "+" },
-    { href: "/client/storico", icon: "📋", label: "Le mie richieste" },
-    { href: "/client/profilo", icon: "🏢", label: "Profilo & impostazioni" },
+    { href: "/client/dashboard", icon: <LayoutDashboard className={ico} />, label: "Dashboard" },
+    { href: "/client/listino", icon: <Wallet className={ico} />, label: "Listino prezzi" },
+    { href: "/client/nuovo-ordine", icon: <Send className={ico} />, label: "Invia richiesta" },
+    { href: "/client/storico", icon: <FileText className={ico} />, label: "Le mie richieste" },
+    { href: "/client/profilo", icon: <Settings className={ico} />, label: "Profilo & impostazioni" },
   ];
 
   return (

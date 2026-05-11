@@ -1,5 +1,6 @@
 import RegisterForm from "./RegisterForm";
 import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 export default function RegisterPage() {
   return (
@@ -62,8 +63,8 @@ export default function RegisterPage() {
 
           <div className="mt-6 pt-6 border-t border-border text-sm text-muted-foreground">
             Hai già un account?{" "}
-            <Link href="/login" className="font-semibold text-brand-orange hover:underline">
-              Accedi →
+            <Link href="/login" className="font-semibold text-brand-orange hover:underline inline-flex items-center gap-1">
+              Accedi <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </div>
         </div>

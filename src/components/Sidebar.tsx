@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { LogOut, X, Menu } from "lucide-react";
 
 export interface NavLink {
   href: string;
-  icon: string;
+  icon: React.ReactNode;
   label: string;
   badge?: string;
   exact?: boolean;
@@ -40,11 +41,7 @@ export default function Sidebar({
         onClick={() => setOpen(true)}
         aria-label="Apri menu"
       >
-        <svg width="22" height="18" viewBox="0 0 22 18" fill="none">
-          <rect width="22" height="2.5" rx="1.25" fill="currentColor" />
-          <rect y="7.5" width="22" height="2.5" rx="1.25" fill="currentColor" />
-          <rect y="15" width="16" height="2.5" rx="1.25" fill="currentColor" />
-        </svg>
+        <Menu size={22} />
       </button>
       <div
         className={"sidebar-overlay" + (open ? " open" : "")}
@@ -63,7 +60,7 @@ export default function Sidebar({
             onClick={() => setOpen(false)}
             aria-label="Chiudi menu"
           >
-            ✕
+            <X size={18} />
           </button>
         </div>
         <div className="sidebar-client">
@@ -96,7 +93,8 @@ export default function Sidebar({
             className="sidebar-logout"
             onClick={() => signOut({ callbackUrl: "/login" })}
           >
-            <span style={{ fontSize: 18 }}>🚪</span>Esci dall&apos;area riservata
+            <LogOut size={18} />
+            Esci dall&apos;area riservata
           </button>
         </div>
       </aside>

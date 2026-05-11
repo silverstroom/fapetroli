@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 
 export default function RegisterForm() {
   const [form, setForm] = useState({
@@ -48,7 +49,7 @@ export default function RegisterForm() {
     return (
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
         <div className="flex items-center gap-3 mb-2 text-emerald-700 font-bold">
-          <span className="text-2xl">✅</span> Richiesta inviata!
+          <CheckCircle2 className="h-6 w-6" /> Richiesta inviata!
         </div>
         <p className="text-sm text-emerald-900/80 leading-relaxed">
           La tua richiesta è stata ricevuta. FA Petroli verificherà i dati e
@@ -62,8 +63,9 @@ export default function RegisterForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-5">
       {error && (
-        <div className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
-          ⚠️ {error}
+        <div className="flex items-start gap-2 rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+          <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+          <span>{error}</span>
         </div>
       )}
 
@@ -178,7 +180,8 @@ export default function RegisterForm() {
       </div>
 
       <Button type="submit" variant="accent" size="lg" disabled={loading} className="w-full">
-        {loading ? "Invio in corso…" : "Richiedi attivazione →"}
+        {loading ? "Invio in corso…" : "Richiedi attivazione"}
+        {!loading && <ArrowRight className="h-4 w-4" />}
       </Button>
     </form>
   );

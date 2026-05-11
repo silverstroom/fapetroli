@@ -6,6 +6,15 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Package,
+  Droplets,
+  CheckCircle2,
+  Wallet,
+  Inbox,
+  ArrowRight,
+  Send,
+} from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -52,7 +61,7 @@ export default async function DashboardPage() {
       <div className="content font-sans">
         <div className="mb-6">
           <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
-            Buongiorno, {userName.split(" ")[0]} 👋
+            Buongiorno, {userName.split(" ")[0]}
           </h2>
           <p className="text-muted-foreground">
             Ecco il riepilogo della tua attività con FA Petroli
@@ -63,7 +72,9 @@ export default async function DashboardPage() {
           <Card className="overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-3xl">📦</div>
+                <div className="h-11 w-11 rounded-xl bg-brand-blue/10 text-brand-blue flex items-center justify-center">
+                  <Package className="h-5 w-5" strokeWidth={1.75} />
+                </div>
                 <Badge variant="outline" className="text-[10px]">Mese</Badge>
               </div>
               <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
@@ -81,7 +92,9 @@ export default async function DashboardPage() {
           <Card className="overflow-hidden border-brand-orange/30 bg-gradient-to-br from-brand-orange/5 to-transparent">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-3xl">🛢️</div>
+                <div className="h-11 w-11 rounded-xl bg-brand-orange/10 text-brand-orange-dark flex items-center justify-center">
+                  <Droplets className="h-5 w-5" strokeWidth={1.75} />
+                </div>
                 <Badge variant="accent" className="text-[10px]">Anno</Badge>
               </div>
               <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
@@ -99,7 +112,9 @@ export default async function DashboardPage() {
           <Card className="overflow-hidden">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-3">
-                <div className="text-3xl">✅</div>
+                <div className="h-11 w-11 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                  <CheckCircle2 className="h-5 w-5" strokeWidth={1.75} />
+                </div>
                 <Badge variant="success" className="text-[10px]">Mese</Badge>
               </div>
               <div className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1">
@@ -119,7 +134,9 @@ export default async function DashboardPage() {
         <Card className="mb-6 overflow-hidden border-none bg-gradient-to-br from-[#0F1E37] via-[#15243d] to-[#1A3A5C] text-white relative">
           <div className="absolute -right-16 -bottom-16 w-72 h-72 rounded-full bg-brand-orange/20 blur-3xl" />
           <CardContent className="relative p-6 flex flex-wrap items-center gap-4">
-            <div className="text-5xl">💶</div>
+            <div className="h-16 w-16 rounded-2xl bg-white/10 backdrop-blur flex items-center justify-center text-brand-orange shrink-0">
+              <Wallet className="h-8 w-8" strokeWidth={1.75} />
+            </div>
             <div className="flex-1 min-w-[200px]">
               <div className="text-xs uppercase tracking-[2px] opacity-60 mb-1">
                 Listino del giorno
@@ -137,10 +154,16 @@ export default async function DashboardPage() {
             </div>
             <div className="flex gap-2">
               <Button asChild variant="accent" size="lg">
-                <Link href="/client/listino">Vedi listino →</Link>
+                <Link href="/client/listino">
+                  Vedi listino
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </Button>
               <Button asChild variant="outline" size="lg" className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white">
-                <Link href="/client/nuovo-ordine">Invia richiesta</Link>
+                <Link href="/client/nuovo-ordine">
+                  <Send className="h-4 w-4" />
+                  Invia richiesta
+                </Link>
               </Button>
             </div>
           </CardContent>
@@ -150,8 +173,8 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
             <CardTitle className="text-lg">Ultime richieste</CardTitle>
-            <Link href="/client/storico" className="text-sm font-semibold text-brand-orange hover:underline">
-              Vedi tutte →
+            <Link href="/client/storico" className="text-sm font-semibold text-brand-orange hover:underline inline-flex items-center gap-1">
+              Vedi tutte <ArrowRight className="h-3.5 w-3.5" />
             </Link>
           </CardHeader>
           <CardContent className="p-0">
@@ -170,11 +193,10 @@ export default async function DashboardPage() {
                   {lastOrders.length === 0 && (
                     <tr>
                       <td colSpan={5} className="p-12 text-center text-muted-foreground">
-                        <div className="text-4xl mb-2">📭</div>
-                        Nessuna richiesta ancora.
-                        <br />
-                        <Link href="/client/nuovo-ordine" className="text-brand-orange font-semibold hover:underline">
-                          Invia la tua prima richiesta →
+                        <Inbox className="h-10 w-10 mx-auto mb-3 text-muted-foreground/60" strokeWidth={1.5} />
+                        <div className="mb-2">Nessuna richiesta ancora.</div>
+                        <Link href="/client/nuovo-ordine" className="text-brand-orange font-semibold hover:underline inline-flex items-center gap-1">
+                          Invia la tua prima richiesta <ArrowRight className="h-3.5 w-3.5" />
                         </Link>
                       </td>
                     </tr>

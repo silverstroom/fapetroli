@@ -5,6 +5,15 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import {
+  Wallet,
+  Send,
+  FileText,
+  CheckCircle2,
+  Info,
+  Fuel,
+  ClipboardList,
+} from "lucide-react";
 
 function todayUTC() {
   const d = new Date();
@@ -47,24 +56,32 @@ export default async function ListinoClientPage() {
       <Topbar title="Listino prezzi" userName={session!.user.name ?? "Cliente"} />
       <div className="content font-sans">
         <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
-              Listino prezzi del giorno 💶
-            </h2>
-            <p className="text-muted-foreground max-w-2xl">
-              Prezzi €/litro aggiornati da FA Petroli. Il totale della tua
-              richiesta verrà calcolato sulla quantità che indicherai.
-            </p>
+          <div className="flex items-start gap-4">
+            <div className="h-14 w-14 rounded-2xl bg-brand-orange/10 text-brand-orange-dark flex items-center justify-center">
+              <Wallet className="h-7 w-7" strokeWidth={1.75} />
+            </div>
+            <div>
+              <h2 className="font-display text-3xl md:text-4xl font-extrabold text-brand-blue mb-1">
+                Listino prezzi del giorno
+              </h2>
+              <p className="text-muted-foreground max-w-2xl">
+                Prezzi €/litro aggiornati da FA Petroli. Il totale della tua
+                richiesta verrà calcolato sulla quantità che indicherai.
+              </p>
+            </div>
           </div>
           <Button asChild variant="accent" size="lg">
-            <Link href="/client/nuovo-ordine">➕ Invia una richiesta</Link>
+            <Link href="/client/nuovo-ordine">
+              <Send className="h-4 w-4" />
+              Invia una richiesta
+            </Link>
           </Button>
         </div>
 
         {prices.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <div className="text-5xl mb-3">📋</div>
+              <ClipboardList className="h-12 w-12 mx-auto mb-3 text-muted-foreground/60" strokeWidth={1.5} />
               <p className="font-display text-xl font-bold text-brand-blue mb-1">
                 Nessun listino disponibile
               </p>
@@ -79,7 +96,11 @@ export default async function ListinoClientPage() {
               "mb-6 flex items-center gap-3 rounded-xl border p-4 " +
               (isToday ? "border-emerald-200 bg-emerald-50" : "border-blue-200 bg-blue-50")
             }>
-              <span className="text-2xl">{isToday ? "✅" : "ℹ️"}</span>
+              {isToday ? (
+                <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-600" strokeWidth={2} />
+              ) : (
+                <Info className="h-5 w-5 shrink-0 text-blue-600" strokeWidth={2} />
+              )}
               <div className="flex-1 text-sm">
                 <span className={isToday ? "text-emerald-900" : "text-blue-900"}>
                   {isToday ? "Listino aggiornato a oggi: " : "Ultimo listino disponibile: "}
@@ -104,7 +125,9 @@ export default async function ListinoClientPage() {
                   <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-bl from-brand-orange/10 to-transparent rounded-full -translate-y-12 translate-x-12" />
                   <CardContent className="relative p-6">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="text-4xl">{p.product.icon ?? "⛽"}</div>
+                      <div className="h-12 w-12 rounded-xl bg-brand-orange/10 text-brand-orange-dark flex items-center justify-center">
+                        <Fuel className="h-6 w-6" strokeWidth={1.75} />
+                      </div>
                       {p.notes && (
                         <Badge variant="accent" className="text-[10px]">
                           {p.notes}
@@ -135,7 +158,10 @@ export default async function ListinoClientPage() {
 
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">📋 Riepilogo prezzi (€/L)</CardTitle>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-muted-foreground" />
+                  Riepilogo prezzi (€/L)
+                </CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 <div className="overflow-x-auto">
@@ -153,7 +179,10 @@ export default async function ListinoClientPage() {
                       {prices.map((p) => (
                         <tr key={p.id} className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors">
                           <td className="p-3 font-bold text-brand-blue">
-                            {p.product.icon ?? "⛽"} {p.product.name}
+                            <span className="inline-flex items-center gap-2">
+                              <Fuel className="h-4 w-4 text-brand-orange-dark" strokeWidth={1.75} />
+                              {p.product.name}
+                            </span>
                           </td>
                           <td className="p-3 font-bold text-brand-orange-dark">€ {p.price.toFixed(3)}</td>
                           <td className="p-3">€ {(p.price * 1000).toFixed(2)}</td>

@@ -2,6 +2,14 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Sidebar from "@/components/Sidebar";
+import {
+  LayoutDashboard,
+  Users,
+  Package,
+  Wallet,
+  Fuel,
+  MapPin,
+} from "lucide-react";
 
 export default async function AdminLayout({
   children,
@@ -14,18 +22,19 @@ export default async function AdminLayout({
 
   const waitingOrders = await prisma.order.count({ where: { status: "WAITING" } });
 
+  const ico = "h-[18px] w-[18px]";
   const links = [
-    { href: "/admin", icon: "📊", label: "Dashboard", exact: true },
-    { href: "/admin/clienti", icon: "👥", label: "Clienti" },
+    { href: "/admin", icon: <LayoutDashboard className={ico} />, label: "Dashboard", exact: true },
+    { href: "/admin/clienti", icon: <Users className={ico} />, label: "Clienti" },
     {
       href: "/admin/ordini",
-      icon: "📦",
+      icon: <Package className={ico} />,
       label: "Richieste / Ordini",
       badge: waitingOrders > 0 ? String(waitingOrders) : undefined,
     },
-    { href: "/admin/listino", icon: "💶", label: "Listino prezzi" },
-    { href: "/admin/prodotti", icon: "⛽", label: "Prodotti" },
-    { href: "/admin/punti-consegna", icon: "📍", label: "Punti Consegna" },
+    { href: "/admin/listino", icon: <Wallet className={ico} />, label: "Listino prezzi" },
+    { href: "/admin/prodotti", icon: <Fuel className={ico} />, label: "Prodotti" },
+    { href: "/admin/punti-consegna", icon: <MapPin className={ico} />, label: "Punti Consegna" },
   ];
 
   return (

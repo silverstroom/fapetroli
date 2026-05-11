@@ -1,6 +1,7 @@
 import LoginForm from "./LoginForm";
 import { BorderBeam } from "@/components/ui/border-beam";
 import Link from "next/link";
+import { Phone, ArrowRight } from "lucide-react";
 
 export default function LoginPage() {
   return (
@@ -61,7 +62,7 @@ export default function LoginPage() {
           </div>
 
           <h2 className="font-display text-4xl font-extrabold text-brand-blue mb-2">
-            Bentornato 👋
+            Bentornato
           </h2>
           <p className="text-muted-foreground mb-8">
             Accedi al tuo account aziendale per inviare richieste e consultare il listino.
@@ -72,14 +73,15 @@ export default function LoginPage() {
           <div className="mt-8 pt-6 border-t border-border space-y-3 text-sm">
             <p className="text-muted-foreground">
               Non sei ancora cliente?{" "}
-              <Link href="/register" className="font-semibold text-brand-orange hover:underline">
-                Richiedi l'attivazione →
+              <Link href="/register" className="font-semibold text-brand-orange hover:underline inline-flex items-center gap-1">
+                Richiedi l'attivazione <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-muted-foreground inline-flex items-center gap-1.5 flex-wrap">
               Problemi di accesso? Contatta FA Petroli{" "}
-              <a href="tel:0968453815" className="font-semibold text-brand-blue hover:text-brand-orange">
-                📞 0968-453815
+              <a href="tel:0968453815" className="font-semibold text-brand-blue hover:text-brand-orange inline-flex items-center gap-1">
+                <Phone className="h-3.5 w-3.5" />
+                0968-453815
               </a>
             </p>
           </div>
